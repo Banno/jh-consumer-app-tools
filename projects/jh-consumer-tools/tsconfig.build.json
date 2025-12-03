@@ -1,0 +1,19 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noEmit": false,
+    "declaration": true,
+    "allowJs": true,
+    "checkJs": false, // used to ignore type errors in jh-elements progress component (and any others!)
+    "outDir": "dist"
+  },
+  "include": ["index.ts", "**/*.js", "**/*.ts", "**/*.types.ts"],
+  "exclude": [
+    "**/*.test.*",
+    "**/*-mock.*",
+    "dist/**/*",
+    ".vitest/**/*",
+    "vitest.config.js",
+    "bin/**/*"
+  ]
+}

@@ -1,0 +1,207 @@
+/*
+ * SPDX-FileCopyrightText: 2025 Jack Henry
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+/* jha-base styles */
+* {
+  --jha-platform-font: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+}
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+*::before,
+*::after {
+  user-select: none;
+  -webkit-user-select: none;
+}
+body {
+  margin: 0;
+  padding: 0;
+  -webkit-font-smoothing: antialiased;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  color: var(--jha-text-base);
+  font-family: var(--jha-platform-font);
+  line-height: 1.4;
+}
+
+/* ds system to jha-wc mappings */
+* {
+  --jha-background-color: var(--secondary-content-background-color);
+  --jha-border-color-hover: var(--divider-default-color);
+  --jha-border-color: var(--divider-default-color);
+  --jha-button-background-active: var(--action-button-active-color);
+  --jha-button-background-hover: var(--primary-button-focused-color);
+  --jha-button-background: var(--primary-button-color);
+  --jha-button-border-radius: var(--button-corner-radius);
+  --jha-button-danger-background: var(--body-text-rejected-color);
+  --jha-button-default-background-active: var(--default-button-pressed-color);
+  --jha-button-default-background-hover: var(--default-button-focused-color);
+  --jha-button-default-background: var(--default-button-color);
+  --jha-button-default-border: var(--default-button-border-color);
+  --jha-button-default-text-color-active: var(--default-button-text-color);
+  --jha-button-default-text-color-hover: var(--default-button-text-color);
+  --jha-button-default-text: var(--default-button-text-color);
+  --jha-button-link-text-hover: var(--inline-button-text-hover-color);
+  --jha-button-link-text: var(--link-button-text-color);
+  --jha-button-neutral-background: var(--body-text-secondary-color);
+  --jha-button-outline-border: var(--divider-default-color);
+  --jha-button-outline-text: var(--link-button-text-color);
+  --jha-button-primary-background: var(--primary-button-color);
+  --jha-button-success-background: var(--body-text-completed-color);
+  --jha-button-text: var(--primary-button-text-color);
+  --jha-button-toggle-text: var(--body-text-secondary-color);
+  --jha-card-article-margin-left: var(--jha-content-inset);
+  --jha-card-article-padding-right: var(--jha-content-inset);
+  --jha-card-border-radius: var(--card-corner-radius);
+  --jha-card-box-shadow: var(--card-shadow);
+  --jha-card-header-margin-left: var(--jha-content-inset);
+  --jha-card-header-padding-right: var(--jha-content-inset);
+  --jha-close-icon-color: var(--jha-text-base);
+  --jha-color-danger: var(--body-text-rejected-color);
+  --jha-color-dark: var(--toast-background-color);
+  --jha-color-gray-medium: var(--body-text-secondary-color);
+  --jha-color-light: var(--secondary-content-background-color);
+  --jha-color-neutral: var(--body-text-secondary-color);
+  --jha-color-primary: var(--primary-button-color);
+  --jha-color-success: var(--body-text-completed-color);
+  --jha-color-warning: var(--body-text-alert-color);
+  --jha-component-background-color: var(--primary-content-background-color);
+  --jha-date-picker-in-range-after: var(--secondary-content-background-color);
+  --jha-date-picker-in-range-before: var(--secondary-content-background-color);
+  --jha-date-picker-in-range: var(--secondary-content-background-color);
+  --jha-dropdown-menu-item-background-hover: var(--menu-item-pressed-color);
+  --jha-dropdown-shadow: var(--card-shadow);
+  --jha-dropdown-toggle-icon-color: var(--toolbar-button-color);
+  --jha-error-message-background-color: var(--error-background-color);
+  --jha-error-message-text-color: var(--error-text-color);
+  --jha-focus-highlight-color: var(--focus-highlight-color, rgba(153, 153, 153, 0.12));
+  --jha-form-checkbox-background-color: var(--body-text-theme-color);
+  --jha-form-checkbox-check-color: var(--primary-content-background-color);
+  --jha-form-floating-group-filled-background: var(--secondary-content-background-color);
+  --jha-form-floating-group-filled-border-color: var(--divider-alternative-color);
+  --jha-form-floating-group-outline-border-color: var(--divider-alternative-color);
+  --jha-form-switch-active-color: var(--toggle-switch-active-color);
+  --jha-icon-color: var(--body-text-primary-color);
+  --jha-input-placeholder-color: var(--body-text-secondary-color);
+  --jha-list-item-horizontal-spacing: var(--jha-content-inset);
+  --jha-pagination-dot-color-selected: var(--jha-text-theme);
+  --jha-pagination-dot-color: var(--divider-default-color);
+  --jha-progress-color-button-outline: var(--primary-button-color);
+  --jha-progress-color-button: var(--primary-button-text-color);
+  --jha-progress-color-button: var(--primary-button-text-color);
+  --jha-progress-color: var(--divider-default-color);
+  --jha-search-box-background: var(--primary-content-background-color);
+  --jha-search-box-border: var(--divider-alternative-color);
+  --jha-select-text: var(--primary-button-color);
+  --jha-tab-item-color-active: var(--jha-color-primary);
+  --jha-tab-item-color: var(--primary-button-color);
+  --jha-text-base: var(--body-text-primary-color);
+  --jha-text-dark: var(--body-text-primary-color);
+  --jha-text-light: var(--body-text-secondary-color);
+  --jha-text-muted: var(--link-button-text-disabled-color);
+  --jha-text-neutral: var(--body-text-secondary-color);
+  --jha-text-theme: var(--body-text-theme-color);
+  --jha-text-white: var(--primary-button-text-color);
+  --jha-toast-background: var(--toast-background-color);
+  --jha-toast-text-color: var(--toast-text-color);
+  --jha-toast-border-radius: var(--card-corner-radius);
+  --jha-tooltip-border-radius: var(--button-corner-radius);
+  --jha-well-background-color: var(--secondary-content-background-color);
+  --jha-menu-text-color: var(--jha-text-dark);
+  --jha-menu-icon-color: var(--menu-icon-color);
+  --jha-menu-text-pressed-color: var(--menu-text-pressed-color);
+  --jha-menu-item-pressed-color: var(--menu-item-pressed-color);
+  --jha-menu-icon-pressed-color: var(--menu-icon-pressed-color);
+  --jha-menu-item-selected-color: var(--menu-item-selected-color)
+    --jha-menu-text-selected-color: var(--menu-text-selected-color);
+  --jha-menu-icon-selected-color: var(--menu-icon-selected-color);
+  --jha-menu-item-selected-accent-color: var(--menu-item-selected-accent-color);
+
+  /** DS variables mapped to fi theme variables **/
+  --jh-button-color-background-primary-enabled: var(--primary-button-color);
+  --jh-button-color-background-primary-hover: var(--primary-button-focused-color);
+  --jh-button-color-background-primary-active: var(--primary-button-pressed-color);
+  --jh-button-color-background-primary-disabled: var(--primary-button-disabled-color);
+  --jh-button-opacity-disabled: var(opaque);
+  --jh-button-color-background-primary-pending: var(--primary-button-color);
+  --jh-button-icon-color-fill-primary-enabled: var(--primary-button-text-color);
+  --jh-button-icon-color-fill-primary-focus: var(--primary-button-text-focused-color);
+  --jh-button-icon-color-fill-primary-hover: var(--primary-button-text-focused-color);
+  --jh-button-icon-color-fill-primary-active: var(--primary-button-text-pressed-color);
+  --jh-button-icon-color-fill-primary-disabled: var(--primary-button-text-disabled-color);
+  --jh-button-label-color-text-primary-enabled: var(--primary-button-text-color);
+  --jh-button-label-color-text-primary-focus: var(--primary-button-text-focused-color);
+  --jh-button-label-color-text-primary-hover: var(--primary-button-text-focused-color);
+  --jh-button-label-color-text-primary-active: var(--primary-button-text-focused-color);
+  --jh-button-label-color-text-primary-disabled: var(--primary-button-text-disabled-color);
+  --jh-button-progress-color-border-primary-pending: var(--primary-button-text-color);
+  --jh-button-color-background-secondary-enabled: var(--default-button-color);
+  --jh-button-color-border-secondary-enabled: var(--default-button-border-color);
+  --jh-button-color-background-secondary-focus: var(--default-button-focused-color);
+  --jh-button-color-border-secondary-focus: var(--default-button-border-focused-color);
+  --jh-button-color-background-secondary-hover: var(--default-button-focused-color);
+  --jh-button-color-border-secondary-hover: var(--default-button-border-focused-color);
+  --jh-button-color-background-secondary-active: var(--default-button-pressed-color);
+  --jh-button-color-border-secondary-active: var(--default-button-border-pressed-color);
+  --jh-button-color-background-secondary-disabled: var(--default-button-disabled-color);
+  --jh-button-color-border-secondary-disabled: var(--default-button-border-disabled-color);
+  --jh-button-opacity-disabled: var(opaque);
+  --jh-button-color-background-secondary-pending: var(--default-button-color);
+  --jh-button-color-border-secondary-pending: var(--default-button-border-color);
+  --jh-button-icon-color-fill-secondary-enabled: var(--default-button-text-color);
+  --jh-button-icon-color-fill-secondary-focus: var(--default-button-text-focused-color);
+  --jh-button-icon-color-fill-secondary-hover: var(--default-button-text-focused-color);
+  --jh-button-icon-color-fill-secondary-active: var(--default-button-text-focused-color);
+  --jh-button-icon-color-fill-secondary-disabled: var(--default-button-text-disabled-color);
+  --jh-button-label-color-text-secondary-enabled: var(--default-button-text-color);
+  --jh-button-label-color-text-secondary-focus: var(--default-button-text-focused-color);
+  --jh-button-label-color-text-secondary-hover: var(--default-button-text-focused-color);
+  --jh-button-label-color-text-secondary-active: var(--default-button-text-pressed-color);
+  --jh-button-label-color-text-secondary-disabled: var(--default-button-text-disabled-color);
+  --jh-button-progress-color-border-secondary-pending: var(--default-button-text-color);
+  --jh-button-color-background-tertiary-focus: var(--link-button-focused-color);
+  --jh-button-color-background-tertiary-hover: var(--link-button-focused-color);
+  --jh-button-color-background-tertiary-active: var(--link-button-pressed-color);
+  --jh-button-opacity-disabled: var(opaque);
+  --jh-button-icon-color-fill-tertiary-enabled: var(--link-button-text-color);
+  --jh-button-icon-color-fill-tertiary-focus: var(--link-button-text-focused-color);
+  --jh-button-icon-color-fill-tertiary-hover: var(--link-button-text-focused-color);
+  --jh-button-icon-color-fill-tertiary-active: var(--link-button-text-pressed-color);
+  --jh-button-icon-color-fill-tertiary-disabled: var(--link-button-text-disabled-color);
+  --jh-button-label-color-text-tertiary-enabled: var(--link-button-text-color);
+  --jh-button-label-color-text-tertiary-focus: var(--link-button-text-focused-color);
+  --jh-button-label-color-text-tertiary-hover: var(--link-button-text-focused-color);
+  --jh-button-label-color-text-tertiary-active: var(--link-button-text-pressed-color);
+  --jh-button-label-color-text-tertiary-disabled: var(--link-button-text-disabled-color);
+  --jh-button-progress-color-border-tertiary-pending: var(--link-button-text-disabled-color);
+  --jh-button-color-background-danger-enabled: var(--body-text-alert-color);
+  --jh-button-color-background-danger-disabled: var(--body-text-alert-color);
+  --jh-button-color-background-danger-pending: var(--body-text-alert-color);
+  --jh-button-icon-color-fill-danger-enabled: var(--primary-content-background-color);
+  --jh-button-icon-color-fill-danger-focus: var(--primary-content-background-color);
+  --jh-button-icon-color-fill-danger-hover: var(--primary-content-background-color);
+  --jh-button-icon-color-fill-danger-active: var(--primary-content-background-color);
+  --jh-button-icon-color-fill-danger-disabled: var(--primary-content-background-color);
+  --jh-button-label-color-text-danger-enabled: var(--primary-content-background-color);
+  --jh-button-label-color-text-danger-focus: var(--primary-content-background-color);
+  --jh-button-label-color-text-danger-hover: var(--primary-content-background-color);
+  --jh-button-label-color-text-danger-active: var(--primary-content-background-color);
+  --jh-button-label-color-text-danger-disabled: var(--primary-content-background-color);
+  --jh-button-progress-color-border-danger-pending: var(--primary-content-background-color);
+  --jh-card-border-radius: var(--card-corner-radius);
+  --jh-card-shadow: var(--card-shadow);
+  --jh-divider-color-border: var(--divider-default-color);
+
+  --jh-color-content-primary-enabled: var(--body-text-primary-color);
+  --jh-color-divider-primary: var(--divider-alternative-color);
+  --jh-color-content-brand-hover: var(--body-text-theme-color);
+  --jh-color-container-primary-enabled: var(--primary-content-background-color);
+  /* Switch */
+  --jh-switch-track-color-background-unselected-enabled: var(--secondary-content-background-color);
+  --jh-switch-track-color-background-selected-enabled: var(--body-text-theme-color);
+}

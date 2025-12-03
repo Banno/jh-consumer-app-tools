@@ -1,0 +1,80 @@
+{
+  "name": "@jack-henry/consumer-tools",
+  "version": "0.0.0",
+  "description": "",
+  "type": "module",
+  "exports": {
+    "./components/*": {
+      "types": "./dist/components/*.d.ts",
+      "import": "./dist/components/*",
+      "require": "./dist/components/*"
+    },
+    "./contexts/*": {
+      "types": "./dist/contexts/*.d.ts",
+      "import": "./dist/contexts/*",
+      "require": "./dist/contexts/*"
+    },
+    "./vite-plugins": {
+      "types": "./dist/vite-plugins/index.d.ts",
+      "import": "./dist/vite-plugins/index.js",
+      "require": "./dist/vite-plugins/index.js"
+    },
+    "./types/*": {
+      "types": "./dist/types/*.d.ts",
+      "import": "./dist/types/*",
+      "require": "./dist/types/*"
+    },
+    "./utils/*": {
+      "types": "./dist/utils/*.d.ts",
+      "import": "./dist/utils/*",
+      "require": "./dist/utils/*"
+    }
+  },
+  "types": "./dist/index.d.ts",
+  "repository": "https://github.com/Banno/digital-ux",
+  "license": "Apache-2.0",
+  "scripts": {
+    "pretest": "playwright install --with-deps chromium",
+    "build": "yarn copy:components && tsc -p tsconfig.build.json && rm -rf ./dist/dist/",
+    "copy:components": "node ./bin/copy-libs.js ./vite-plugins/css ./fonts",
+    "prepublishOnly": "yarn build",
+    "dev": "tsc -p tsconfig.build.json --watch",
+    "typecheck": "tsc",
+    "test": "vitest"
+  },
+  "files": [
+    "dist",
+    "NOTICE"
+  ],
+  "dependencies": {
+    "@jack-henry/jh-elements": "^2.0.0-beta.8",
+    "@jack-henry/jh-icons": "^2.0.0-beta.6",
+    "@jack-henry/jh-tokens": "^2.0.0-beta.8",
+    "openid-client": "^5.7.0",
+    "vite": "^7.2.4",
+    "vite-plugin-static-copy": "3.1.3"
+  },
+  "devDependencies": {
+    "@jack-henry/web-component-router": "^3.12.2",
+    "@lit/context": "1.1.6",
+    "@open-wc/testing-helpers": "^3.0.1",
+    "@vitest/browser": "^4.0.14",
+    "@vitest/browser-playwright": "^4.0.14",
+    "glob": "^12.0.0",
+    "lit": "^3.3.1",
+    "playwright": "^1.57.0",
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.14"
+  },
+  "peerDependencies": {
+    "@jack-henry/jh-elements": "^2.0.0-beta.8",
+    "@jack-henry/jh-icons": "^2.0.0-beta.6",
+    "@jack-henry/jh-tokens": "^2.0.0-beta.8",
+    "@jack-henry/web-component-router": "3.12.2",
+    "@lit/context": "^1.1.6",
+    "lit": "^3.3.1",
+    "openid-client": "^5.7.0",
+    "vite": "^7.2.4",
+    "vite-plugin-static-copy": "^3.1.3"
+  }
+}

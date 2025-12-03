@@ -1,0 +1,12 @@
+#!/bin/sh
+
+# SPDX-FileCopyrightText: 2025 Jack Henry
+#
+# SPDX-License-Identifier: Apache-2.0
+
+. "$(dirname "$0")/_/husky.sh"
+
+yarn typecheck
+
+# uncomment to test
+# exit 1

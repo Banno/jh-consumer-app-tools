@@ -1,0 +1,11 @@
+#!/bin/sh
+
+# SPDX-FileCopyrightText: 2025 Jack Henry
+#
+# SPDX-License-Identifier: Apache-2.0
+
+. "$(dirname "$0")/_/husky.sh"
+
+npx lint-staged
+# uncomment to test the pre-commit hook
+# exit 1

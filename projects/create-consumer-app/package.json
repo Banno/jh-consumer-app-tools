@@ -1,0 +1,30 @@
+{
+  "name": "@jack-henry/create-consumer-app",
+  "version": "0.0.1",
+  "license": "Apache-2.0",
+  "type": "module",
+  "bin": "./bin/cli.js",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node ./src/index.js"
+  },
+  "files": [
+    "bin",
+    "src",
+    "example-consumer-app",
+    "NOTICE",
+    "!example-consumer-app/dist",
+    "!example-consumer-app/certs",
+    "!example-consumer-app/node_modules",
+    "!example-consumer-app/.env"
+  ],
+  "dependencies": {
+    "@inquirer/prompts": "7.10.1",
+    "chalk": "5.6.2",
+    "fs-extra": "11.3.2"
+  },
+  "repository": {
+    "type": "git+ssh",
+    "url": "git@github.com:banno/digital-ux.git"
+  }
+}

@@ -1,0 +1,36 @@
+# This workflow will do a clean install of node dependencies, build the projects, run type checking, and run tests.
+name: Tests
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+    types: [opened, synchronize, ready_for_review]
+    paths-ignore:
+      - '**/*.md'
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Enable Corepack
+        run: corepack enable
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: 'yarn'
+      - name: Install dependencies
+        run: yarn install
+      - name: Build
+        run: yarn build
+      - name: Typecheck
+        run: yarn typecheck
+      - name: Test
+        run: |
+          npx playwright install --with-deps chromium
+          CI=1 yarn test

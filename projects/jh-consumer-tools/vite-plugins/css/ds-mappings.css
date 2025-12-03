@@ -1,0 +1,76 @@
+/*
+ * SPDX-FileCopyrightText: 2025 Jack Henry
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+:root {
+  --jh-color-interactive-visited: var(--link-button-text-pressed-color);
+  --jh-color-interactive-highlight: var(--menu-item-selected-color);
+  --jh-color-interactive-focus-inner: var(--default-button-border-focused-color);
+  --jh-color-interactive-focus-outer: var(--default-button-focused-color);
+  --jh-color-content-on-inverse-active: var(--primary-button-text-pressed-color);
+  --jh-color-content-on-inverse-hover: var(--primary-button-text-focused-color);
+  --jh-color-content-on-inverse-enabled: var(--secondary-theme-text-color);
+  --jh-color-content-on-negative-active: var(--error-text-color);
+  --jh-color-content-on-negative-hover: var(--error-text-color);
+  --jh-color-content-on-negative-enabled: var(--error-text-color);
+  --jh-color-content-on-positive-active: var(--primary-button-text-color);
+  --jh-color-content-on-positive-hover: var(--primary-button-text-color);
+  --jh-color-content-on-positive-enabled: var(--primary-button-text-color);
+  --jh-color-content-on-secondary-active: var(--menu-text-selected-color);
+  --jh-color-content-on-secondary-hover: var(--menu-text-pressed-color);
+  --jh-color-content-on-secondary-enabled: var(--menu-text-color);
+  --jh-color-content-on-primary-active: var(--primary-button-text-pressed-color);
+  --jh-color-content-on-primary-hover: var(--primary-button-text-focused-color);
+  --jh-color-content-on-primary-enabled: var(--primary-button-text-color);
+  --jh-color-content-on-brand-active: var(--toolbar-action-mode-title-color);
+  --jh-color-content-on-brand-hover: var(--toolbar-action-mode-title-color);
+  --jh-color-content-on-brand-enabled: var(--secondary-theme-text-color);
+  --jh-color-content-inverse-active: var(--secondary-theme-text-color);
+  --jh-color-content-inverse-hover: var(--secondary-theme-text-color);
+  --jh-color-content-inverse-enabled: var(--secondary-theme-text-color);
+  --jh-color-content-negative-active: var(--body-text-rejected-color);
+  --jh-color-content-negative-hover: var(--body-text-rejected-color);
+  --jh-color-content-negative-enabled: var(--body-text-alert-color);
+  --jh-color-content-positive-active: var(--body-text-completed-color);
+  --jh-color-content-positive-hover: var(--body-text-highlight-color);
+  --jh-color-content-positive-enabled: var(--body-text-deposit-color);
+  --jh-color-content-secondary-active: var(--body-text-secondary-color);
+  --jh-color-content-secondary-hover: var(--body-text-secondary-color);
+  --jh-color-content-secondary-enabled: var(--body-text-secondary-color);
+  --jh-color-content-primary-active: var(--body-text-primary-color);
+  --jh-color-content-primary-hover: var(--body-text-primary-color);
+  --jh-color-content-primary-enabled: var(--body-text-primary-color);
+  --jh-color-content-brand-active: var(--primary-button-pressed-color);
+  --jh-color-content-brand-hover: var(--primary-button-focused-color);
+  --jh-color-content-brand-enabled: var(--primary-button-color);
+  --jh-color-brand-on-gradient-dark: var(--toolbar-action-mode-title-color);
+  --jh-color-brand-on-gradient-light: var(--primary-button-text-color);
+  --jh-color-brand-on-tertiary: var(--primary-button-text-color);
+  --jh-color-brand-on-secondary: var(--primary-button-text-color);
+  --jh-color-brand-on-primary: var(--primary-button-text-color);
+  --jh-color-brand-gradient-dark: var(--primary-button-pressed-color);
+  --jh-color-brand-gradient-medium: var(--primary-button-focused-color);
+  --jh-color-brand-gradient-light: var(--primary-button-color);
+  --jh-color-brand-tertiary: var(--account-card-primary-accent-color);
+  --jh-color-brand-secondary: var(--secondary-theme-background-color);
+  --jh-color-brand-primary: var(--primary-theme-background-color);
+  --jh-color-divider-inverse: var(--menu-divider-color);
+  --jh-color-divider-secondary: var(--divider-alternative-color);
+  --jh-color-divider-primary: var(--divider-default-color);
+  --jh-color-control-active: var(--menu-icon-pressed-color);
+  --jh-color-control-hover: var(--menu-icon-selected-color);
+  --jh-color-control-enabled: var(--menu-icon-color);
+  --jh-color-container-secondary-selected: var(--menu-item-selected-color);
+  --jh-color-container-secondary-active: var(--menu-item-pressed-color);
+  --jh-color-container-secondary-hover: var(--footer-background-color);
+  --jh-color-container-secondary-enabled: var(--secondary-content-background-color);
+  --jh-color-container-primary-selected: var(--menu-item-selected-color);
+  --jh-color-container-primary-active: var(--defaultButtonPressedColor);
+  --jh-color-container-primary-hover: var(--defaultButtonFocusedColor);
+  --jh-color-container-primary-enabled: var(--primary-content-background-color);
+  --jh-color-container-page: var(--dashboard-page-background-color);
+  /** icons **/
+  --jh-icon-color-fill: var(--body-text-primary-color);
+}

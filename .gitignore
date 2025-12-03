@@ -1,0 +1,36 @@
+# SPDX-FileCopyrightText: 2025 Jack Henry
+#
+# SPDX-License-Identifier: Apache-2.0
+
+.DS_Store
+node_modules
+coverage
+*.d.ts
+*.d.ts.map
+!global.d.ts
+yarn-error.log
+.vscode
+.vitest
+.nx
+**/dist
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
+.idea/*
+# Swap the comments on the following lines if you wish to use zero-installs
+# In that case, don't forget to run `yarn config set enableGlobalCache false`!
+# Documentation here: https://yarnpkg.com/features/caching#zero-installs
+
+#!.yarn/cache
+.pnp.*
+
+# Temp ignoreinstitution assets in the example consumer app
+**/assets/institution
+.cursor/rules/nx-rules.mdc
+.github/instructions/nx.instructions.md
+
+# .env files
+**/.env

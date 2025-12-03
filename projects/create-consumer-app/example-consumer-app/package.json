@@ -1,0 +1,30 @@
+{
+  "name": "@jack-henry/example-consumer-app",
+  "version": "0.0.0",
+  "license": "Apache-2.0",
+  "type": "module",
+  "private": true,
+  "files": [
+    "src/",
+    "index.html",
+    "vite.config.ts",
+    "tsconfig.json",
+    "README.md"
+  ],
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "yarn build && vite preview"
+  },
+  "devDependencies": {
+    "@jack-henry/consumer-tools": "^0.0.0",
+    "@jack-henry/jh-elements": "^2.0.0-beta.8",
+    "@jack-henry/jh-icons": "^2.0.0-beta.6",
+    "@jack-henry/jh-tokens": "^2.0.0-beta.8",
+    "@jack-henry/web-component-router": "3.12.2",
+    "@lit/context": "^1.1.6",
+    "lit": "^3.3.1",
+    "vite": "^7.1.9",
+    "vite-plugin-static-copy": "^3.1.3"
+  }
+}

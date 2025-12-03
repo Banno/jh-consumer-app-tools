@@ -1,0 +1,28 @@
+{
+  "general": {
+    "checkpointing": {
+      "enabled": true
+    }
+  },
+  "context": {
+    "fileName": ["GEMINI.md", "AGENTS.md"]
+  },
+  "security": {
+    "auth": {
+      "enforcedType": "vertex-ai"
+    },
+    "folderTrust": {
+      "enabled": true
+    }
+  },
+  "ui": {
+    "hideWindowTitle": true
+  },
+  "telemetry": {
+    "enabled": false,
+    "logPrompts": false
+  },
+  "privacy": {
+    "usageStatisticsEnabled": false
+  }
+}
