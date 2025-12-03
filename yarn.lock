@@ -867,7 +867,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jack-henry/consumer-tools@npm:^0.0.0, @jack-henry/consumer-tools@workspace:projects/jh-consumer-tools":
+"@jack-henry/consumer-tools@npm:^0.0.1, @jack-henry/consumer-tools@workspace:projects/jh-consumer-tools":
   version: 0.0.0-use.local
   resolution: "@jack-henry/consumer-tools@workspace:projects/jh-consumer-tools"
   dependencies:
@@ -916,7 +916,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@jack-henry/example-consumer-app@workspace:projects/create-consumer-app/example-consumer-app"
   dependencies:
-    "@jack-henry/consumer-tools": "npm:^0.0.0"
+    "@jack-henry/consumer-tools": "npm:^0.0.1"
     "@jack-henry/jh-elements": "npm:^2.0.0-beta.8"
     "@jack-henry/jh-icons": "npm:^2.0.0-beta.6"
     "@jack-henry/jh-tokens": "npm:^2.0.0-beta.8"

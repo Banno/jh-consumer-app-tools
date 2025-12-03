@@ -1,6 +1,6 @@
 {
   "name": "@jack-henry/create-consumer-app",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "license": "Apache-2.0",
   "type": "module",
   "bin": "./bin/cli.js",
@@ -25,6 +25,6 @@
   },
   "repository": {
     "type": "git+ssh",
-    "url": "git@github.com:banno/digital-ux.git"
+    "url": "git@github.com:banno/jh-consumer-app-tools.git"
   }
 }
