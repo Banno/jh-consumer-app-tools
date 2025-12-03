@@ -885,7 +885,7 @@ __metadata:
     playwright: "npm:^1.57.0"
     typescript: "npm:^5.9.3"
     vite: "npm:^7.2.4"
-    vite-plugin-static-copy: "npm:3.1.3"
+    vite-plugin-static-copy: "npm:3.1.4"
     vitest: "npm:^4.0.14"
   peerDependencies:
     "@jack-henry/jh-elements": ^2.0.0-beta.8
@@ -4053,7 +4053,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fs-extra@npm:11.3.2, fs-extra@npm:^11.2.0, fs-extra@npm:^11.3.2":
+"fs-extra@npm:11.3.2, fs-extra@npm:^11.2.0":
   version: 11.3.2
   resolution: "fs-extra@npm:11.3.2"
   dependencies:
@@ -8286,22 +8286,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vite-plugin-static-copy@npm:3.1.3":
-  version: 3.1.3
-  resolution: "vite-plugin-static-copy@npm:3.1.3"
-  dependencies:
-    chokidar: "npm:^3.6.0"
-    fs-extra: "npm:^11.3.2"
-    p-map: "npm:^7.0.3"
-    picocolors: "npm:^1.1.1"
-    tinyglobby: "npm:^0.2.15"
-  peerDependencies:
-    vite: ^5.0.0 || ^6.0.0 || ^7.0.0
-  checksum: 10c0/f58bf609246c440b4e3c0db10abf5965658c34ee03e72b94d4fc6ff35fa4568b5baa0fe36057234a4b1e84a9b4b3c2cdbff9f943b9e69d883d3a05353cbf9090
-  languageName: node
-  linkType: hard
-
-"vite-plugin-static-copy@npm:^3.1.3":
+"vite-plugin-static-copy@npm:3.1.4, vite-plugin-static-copy@npm:^3.1.3":
   version: 3.1.4
   resolution: "vite-plugin-static-copy@npm:3.1.4"
   dependencies:
