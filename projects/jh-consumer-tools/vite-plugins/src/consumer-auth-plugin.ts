@@ -2,15 +2,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import {
-  Issuer,
-  custom,
-  generators,
-  AuthorizationParameters,
-  TokenSet,
-  ClientAuthMethod,
-  type Client,
-} from 'openid-client';
+import * as client from 'openid-client';
 import { ViteDevServer, Plugin } from 'vite';
 import { IncomingMessage, ServerResponse } from 'http';
 
@@ -21,7 +13,7 @@ export interface ConsumerAuthOptions {
     client_secret: string;
     grant_types?: string[];
     response_types?: string[];
-    token_endpoint_auth_method?: ClientAuthMethod;
+    token_endpoint_auth_method?: string;
     redirect_uris?: string[];
   };
   authScope?: string;
@@ -43,15 +35,15 @@ export default function consumerAuthPlugin(options: ConsumerAuthOptions): Plugin
     apiHeadersToCopy = ['x-request-id'],
   } = options;
 
-  let client: Client;
+  let config: client.Configuration;
   let code_verifier: string;
   let code_challenge: string;
-  let authConfig: AuthorizationParameters;
+  let authorizationUrl: URL;
 
   // This example project doesn't include any storage mechanism(e.g. a database) for access tokens.
   // Therefore, we use this as our 'storage' for the purposes of this example.
   // This method is NOT recommended for use in production systems.
-  let accessToken: TokenSet;
+  let accessToken: client.TokenEndpointResponse | null = null;
 
   /** Check whether the user is authenticated, and refresh access token if necessary. If token cannot be refreshed, return 401. */
   const checkAuth = async (req: IncomingMessage, res: ServerResponse, next: (err?: any) => void) => {
@@ -61,10 +53,12 @@ export default function consumerAuthPlugin(options: ConsumerAuthOptions): Plugin
       return;
     }
 
-    const expired = accessToken.expired();
+    const now = Math.floor(Date.now() / 1000);
+    const expiresAt = typeof accessToken.expires_at === 'number' ? accessToken.expires_at : 0;
+    const expired = expiresAt ? now >= expiresAt : false;
     if (expired && accessToken.refresh_token) {
       try {
-        accessToken = await client.refresh(accessToken.refresh_token);
+        accessToken = await client.refreshTokenGrant(config, accessToken.refresh_token);
       } catch (err) {
         res.statusCode = 401;
         res.end();
@@ -109,45 +103,47 @@ export default function consumerAuthPlugin(options: ConsumerAuthOptions): Plugin
     },
     async configureServer(server: ViteDevServer) {
       // Initialize OIDC client
-      const issuer = await Issuer.discover(`${apiBaseUrl}/a/consumer/api/v0/oidc`);
-      client = new issuer.Client(clientConfig);
-      client[custom.clock_tolerance] = 300; // to allow a 5 minute clock skew for verification
+      const issuerUrl = new URL(`${apiBaseUrl}/a/consumer/api/v0/oidc`);
+      config = await client.discovery(issuerUrl, clientConfig.client_id, clientConfig.client_secret);
+      code_verifier = client.randomPKCECodeVerifier();
+      code_challenge = await client.calculatePKCECodeChallenge(code_verifier);
 
-      code_verifier = generators.codeVerifier();
-      code_challenge = generators.codeChallenge(code_verifier);
+      const redirect_uri = clientConfig.redirect_uris?.[0] || 'https://localhost:3000/auth/cb';
 
-      authConfig = {
+      authorizationUrl = client.buildAuthorizationUrl(config, {
+        redirect_uri,
         scope: authScope,
-        resource: apiBaseUrl,
         code_challenge,
         code_challenge_method: 'S256',
-        claims: {
+        claims: JSON.stringify({
           id_token: {
             'https://api.banno.com/consumer/claim/institution_details': null,
           },
-        },
-      };
+        }),
+      });
 
       // Auth callback handler
       server.middlewares.use(
         '/auth/cb',
         async (req: IncomingMessage, res: ServerResponse, next: (err?: any) => void) => {
-          const params = client.callbackParams(req);
-          if (!params.code) {
+          const params = new URL(`http://localhost${req.url}`).searchParams;
+          const code = params.get('code');
+
+          if (!code) {
             // initiate the auth flow in sso mode
-            const authUrl = client.authorizationUrl(authConfig);
             res.statusCode = 302;
-            res.setHeader('Location', authUrl);
+            res.setHeader('Location', authorizationUrl.href);
             res.end();
+            return;
           }
+
           try {
-            const tokenSet = await client.callback(
-              clientConfig.redirect_uris && clientConfig.redirect_uris[0],
-              params,
-              {
-                code_verifier,
-              },
-            );
+            const currentUrl = new URL(`http://localhost${req.url}`);
+            const tokenSet = await client.authorizationCodeGrant(config, currentUrl, {
+              pkceCodeVerifier: code_verifier,
+              idTokenExpected: true,
+            });
+
             if (tokenSet.id_token) {
               const [header, payload, signature] = tokenSet.id_token.split('.');
               if (payload) {
@@ -170,9 +166,8 @@ export default function consumerAuthPlugin(options: ConsumerAuthOptions): Plugin
 
       // Auth initiation handler when running standalone
       server.middlewares.use('/auth', (req: IncomingMessage, res: ServerResponse, next: (err?: any) => void) => {
-        const authUrl = client.authorizationUrl(authConfig);
         res.statusCode = 302;
-        res.setHeader('Location', authUrl);
+        res.setHeader('Location', authorizationUrl.href);
         res.end();
       });
 
@@ -182,7 +177,7 @@ export default function consumerAuthPlugin(options: ConsumerAuthOptions): Plugin
         '/validate',
         async (req: IncomingMessage, res: ServerResponse, next: (err?: any) => void) => {
           try {
-            const user = await client.userinfo(accessToken);
+            const user = await client.fetchUserInfo(config, accessToken!.access_token!, client.skipSubjectCheck);
             res.setHeader('Content-Type', 'application/json');
             res.end(JSON.stringify(user));
           } catch (e) {
