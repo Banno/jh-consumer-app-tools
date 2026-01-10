@@ -138,8 +138,11 @@ export default function consumerAuthPlugin(options: ConsumerAuthOptions): Plugin
           }
 
           try {
-            const currentUrl = new URL(`http://localhost${req.url}`);
-            const tokenSet = await client.authorizationCodeGrant(config, currentUrl, {
+            // Construct the full callback URL using the registered redirect_uri
+            const callbackUrl = new URL(redirect_uri);
+            callbackUrl.search = new URL(`http://localhost${req.url}`).search;
+
+            const tokenSet = await client.authorizationCodeGrant(config, callbackUrl, {
               pkceCodeVerifier: code_verifier,
               idTokenExpected: true,
             });
