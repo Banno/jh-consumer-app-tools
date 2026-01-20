@@ -1,11 +1,10 @@
 name: Publish
 on:
-  # JR: disable publish on push until we're ready to go live
-  # push:
-  #   branches:
-  #     - main
-  #   paths-ignore:
-  #     - '**/*.md'
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - '**/*.md'
   workflow_dispatch: {}
 
 jobs:
