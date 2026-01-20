@@ -12,7 +12,7 @@
     "registry": "https://registry.npmjs.org"
   },
   "scripts": {
-    "release": "HUSKY=0 lerna publish --no-private --yes --create-release github",
+    "release": "HUSKY=0 lerna publish --no-private --yes",
     "release:local": "HUSKY=0 lerna publish from-package --no-private",
     "typecheck": "lerna run typecheck --concurrency 1",
     "build": "lerna run build --concurrency 1",
