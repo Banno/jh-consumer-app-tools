@@ -18,7 +18,6 @@
     "build": "lerna run build --concurrency 1",
     "test": "lerna run test --concurrency 1",
     "prepare": "husky install",
-    "postinstall": "npm run build",
     "format": "prettier --write ."
   },
   "devDependencies": {
