@@ -14,7 +14,7 @@ import { fileURLToPath } from 'node:url';
 // Export individual plugins
 export { institutionAssetsPlugin, institutionThemePlugin, consumerLayoutPlugin, consumerAuthPlugin };
 
-const fontsUrl = await import.meta.resolve?.('../../fonts');
+const fontsUrl = await import.meta.resolve?.('../../dist/fonts');
 const fontsPath = normalizePath(fileURLToPath(fontsUrl));
 
 interface ConsumerConfigOptions {
