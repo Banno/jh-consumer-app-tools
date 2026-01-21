@@ -17,7 +17,7 @@
     "preview": "yarn build && vite preview"
   },
   "devDependencies": {
-    "@jack-henry/consumer-tools": "^0.0.1",
+    "@jack-henry/consumer-tools": "^0.0.2",
     "@jack-henry/jh-elements": "^2.0.0-beta.8",
     "@jack-henry/jh-icons": "^2.0.0-beta.6",
     "@jack-henry/jh-tokens": "^2.0.0-beta.8",
