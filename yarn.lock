@@ -2049,7 +2049,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@vitest/browser@npm:4.0.15":
+"@vitest/browser@npm:4.0.15, @vitest/browser@npm:^4.0.14":
   version: 4.0.15
   resolution: "@vitest/browser@npm:4.0.15"
   dependencies:
@@ -2064,24 +2064,6 @@ __metadata:
   peerDependencies:
     vitest: 4.0.15
   checksum: 10c0/b74c1ab5b03a494b1a91e270417a794e616d3d9d5002de816b6a9913073fdf5939ca63b30a37e4e865cb9402b8682254facaf4b854d002b65b6ea85fccf38253
-  languageName: node
-  linkType: hard
-
-"@vitest/browser@npm:^4.0.14":
-  version: 4.0.14
-  resolution: "@vitest/browser@npm:4.0.14"
-  dependencies:
-    "@vitest/mocker": "npm:4.0.14"
-    "@vitest/utils": "npm:4.0.14"
-    magic-string: "npm:^0.30.21"
-    pixelmatch: "npm:7.1.0"
-    pngjs: "npm:^7.0.0"
-    sirv: "npm:^3.0.2"
-    tinyrainbow: "npm:^3.0.3"
-    ws: "npm:^8.18.3"
-  peerDependencies:
-    vitest: 4.0.14
-  checksum: 10c0/6f741fbe1173b0620f27730c74eec2e92bcd584bf1d9075633563497196b747f5c7a21059f21ec4fbc37a4979aca4dd3b4572dbdebe0482b473fb55609b5af37
   languageName: node
   linkType: hard
 
