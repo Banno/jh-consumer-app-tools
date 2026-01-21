@@ -1,20 +1,19 @@
 name: Publish
 on:
-  # JR: disable publish on push until we're ready to go live
-  # push:
-  #   branches:
-  #     - main
-  #   paths-ignore:
-  #     - '**/*.md'
+  # Triggered by completed Test runs
+  workflow_run:
+    workflows: ["Test"]
+    types: [completed]
+    branches: [main]
   workflow_dispatch: {}
 
 jobs:
   publish-packages:
     name: Publish Packages
-    if: github.ref_name == github.event.repository.default_branch
+    if: github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch'
     permissions:
       id-token: write  # Required for OIDC
-      contents: read
+      contents: write # required for github release and package.json version updates via lerna
     runs-on: ubuntu-latest
     env:
       FORCE_COLOR: '1'
@@ -29,8 +28,13 @@ jobs:
           registry-url: https://registry.npmjs.org/
       - name: Install packages
         run: YARN_ENABLE_COLORS=true yarn install
+
       - name: Publish packages to npm
+
         run: |
-          yarn install
+          git config user.name "GitHub Actions"
+          git config user.email "actions@users.noreply.github.com"
           yarn build
           yarn release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }} # used for lerna version via lerna publish --create-release github
