@@ -2,7 +2,7 @@ name: Publish
 on:
   # Triggered by completed Test runs
   workflow_run:
-    workflows: ["Test"]
+    workflows: ["Tests"]
     types: [completed]
     branches: [main]
   workflow_dispatch: {}
