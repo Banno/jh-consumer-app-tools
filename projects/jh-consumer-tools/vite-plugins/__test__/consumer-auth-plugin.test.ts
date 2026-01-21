@@ -5,51 +5,44 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import consumerAuthPlugin from '../src/consumer-auth-plugin';
 import type { ConsumerAuthOptions } from '../src/consumer-auth-plugin';
-import { Issuer, generators } from 'openid-client';
+import * as client from 'openid-client';
 
-// Mock openid-client module - must be defined before vi.mock
+// Mock openid-client module
 vi.mock('openid-client', () => {
-  const mockClient = {
-    authorizationUrl: vi.fn(() => 'https://api.example.com/auth'),
-    callbackParams: vi.fn(() => ({ code: 'test-code' })),
-    callback: vi.fn(() =>
+  const mockConfig = {
+    issuer: 'https://api.example.com/a/consumer/api/v0/oidc',
+    authorization_endpoint: 'https://api.example.com/auth',
+    token_endpoint: 'https://api.example.com/token',
+    userinfo_endpoint: 'https://api.example.com/userinfo',
+  };
+
+  return {
+    discovery: vi.fn(() => Promise.resolve(mockConfig)),
+    randomPKCECodeVerifier: vi.fn(() => 'test-code-verifier'),
+    calculatePKCECodeChallenge: vi.fn(() => Promise.resolve('test-code-challenge')),
+    buildAuthorizationUrl: vi.fn(() => new URL('https://api.example.com/auth')),
+    authorizationCodeGrant: vi.fn(() =>
       Promise.resolve({
         access_token: 'test-access-token',
         refresh_token: 'test-refresh-token',
         id_token: 'header.eyJ0ZXN0IjoidmFsdWUifQ.signature',
-        expired: () => false,
+        token_type: 'Bearer',
+        expires_in: 3600,
+        expires_at: Math.floor(Date.now() / 1000) + 3600,
       }),
     ),
-    refresh: vi.fn(() =>
+    refreshTokenGrant: vi.fn(() =>
       Promise.resolve({
         access_token: 'new-access-token',
         refresh_token: 'new-refresh-token',
-        expired: () => false,
+        token_type: 'Bearer',
+        expires_in: 3600,
+        expires_at: Math.floor(Date.now() / 1000) + 3600,
       }),
     ),
-    userinfo: vi.fn(() => Promise.resolve({ sub: 'user123', email: 'user@example.com' })),
-  };
-
-  // Create a proper constructor function for Client
-  function MockClient() {
-    return mockClient;
-  }
-
-  const mockIssuer = {
-    Client: MockClient,
-  };
-
-  return {
-    Issuer: {
-      discover: vi.fn(() => Promise.resolve(mockIssuer)),
-    },
-    generators: {
-      codeVerifier: vi.fn(() => 'test-code-verifier'),
-      codeChallenge: vi.fn(() => 'test-code-challenge'),
-    },
-    custom: {
-      clock_tolerance: Symbol('clock_tolerance'),
-    },
+    fetchUserInfo: vi.fn(() => Promise.resolve({ sub: 'user123', email: 'user@example.com' })),
+    clockTolerance: Symbol('clockTolerance'),
+    skipSubjectCheck: Symbol('skipSubjectCheck'),
   };
 });
 
@@ -181,7 +174,7 @@ describe('consumerAuthPlugin', () => {
   });
 
   describe('server configuration', () => {
-    it('should call Issuer.discover with correct URL', async () => {
+    it('should call client.discovery with correct URL', async () => {
       const plugin = consumerAuthPlugin(mockOptions);
       const mockServer: any = {
         middlewares: {
@@ -191,7 +184,11 @@ describe('consumerAuthPlugin', () => {
 
       if (typeof plugin.configureServer === 'function') {
         await plugin.configureServer.call(plugin, mockServer);
-        expect(vi.mocked(Issuer.discover)).toHaveBeenCalledWith(`${mockOptions.apiBaseUrl}/a/consumer/api/v0/oidc`);
+        expect(vi.mocked(client.discovery)).toHaveBeenCalledWith(
+          expect.any(URL),
+          mockOptions.clientConfig.client_id,
+          mockOptions.clientConfig.client_secret,
+        );
       }
     });
 
@@ -205,8 +202,8 @@ describe('consumerAuthPlugin', () => {
 
       if (typeof plugin.configureServer === 'function') {
         await plugin.configureServer.call(plugin, mockServer);
-        expect(vi.mocked(generators.codeVerifier)).toHaveBeenCalled();
-        expect(vi.mocked(generators.codeChallenge)).toHaveBeenCalled();
+        expect(vi.mocked(client.randomPKCECodeVerifier)).toHaveBeenCalled();
+        expect(vi.mocked(client.calculatePKCECodeChallenge)).toHaveBeenCalled();
       }
     });
 
@@ -332,8 +329,8 @@ describe('consumerAuthPlugin', () => {
 
       if (typeof plugin.configureServer === 'function') {
         await plugin.configureServer.call(plugin, mockServer);
-        // Verify that Issuer.discover was called which initializes the client
-        expect(vi.mocked(Issuer.discover)).toHaveBeenCalled();
+        // Verify that client.discovery was called which initializes the client
+        expect(vi.mocked(client.discovery)).toHaveBeenCalled();
       }
     });
   });
