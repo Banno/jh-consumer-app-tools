@@ -1,6 +1,7 @@
 {
   "name": "@jack-henry/consumer-tools",
   "version": "0.0.2",
+  "license": "Apache-2.0",
   "description": "",
   "type": "module",
   "exports": {
@@ -35,7 +36,9 @@
     "type": "git+ssh",
     "url": "git@github.com:banno/jh-consumer-app-tools.git"
   },
-  "license": "Apache-2.0",
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org"
+  },
   "scripts": {
     "pretest": "playwright install --with-deps chromium",
     "build": "yarn copy:components && tsc -p tsconfig.build.json && rm -rf ./dist/dist/",

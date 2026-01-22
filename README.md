@@ -88,7 +88,7 @@ export default defineConfig({
 
 ## Development
 
-This is a Lerna monorepo using Yarn workspaces.
+This is an Nx monorepo using Yarn workspaces.
 
 ### Prerequisites
 
@@ -131,7 +131,7 @@ jh-consumer-app-tools/
 
 ## Publishing
 
-Releases are managed with Lerna:
+Releases are managed with nx:
 
 ```bash
 yarn release

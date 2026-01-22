@@ -8,28 +8,27 @@
       "projects/create-consumer-app/example-consumer-app"
     ]
   },
-  "publishConfig": {
-    "registry": "https://registry.npmjs.org"
-  },
   "scripts": {
-    "release": "HUSKY=0 lerna publish --no-private --yes --create-release github",
-    "release:local": "HUSKY=0 lerna publish from-package --no-private",
-    "typecheck": "lerna run typecheck --concurrency 1",
-    "build": "lerna run build --concurrency 1",
-    "test": "lerna run test --concurrency 1",
+    "release": "HUSKY=0 nx release",
+    "nx:release:dry": "HUSKY=0 nx release --dry-run",
+    "typecheck": "nx run-many --target=typecheck --parallel",
+    "build": "nx run-many --target=build --parallel",
+    "test": "nx run-many --target=test --parallel",
     "prepare": "husky install",
     "postinstall": "npm run build",
     "format": "prettier --write ."
   },
   "devDependencies": {
-    "@commitlint/cli": "^20.1.0",
-    "@commitlint/config-conventional": "^20.0.0",
-    "@commitlint/config-lerna-scopes": "^20.0.0",
+    "@commitlint/cli": "^20.3.1",
+    "@commitlint/config-conventional": "^20.3.1",
+    "@commitlint/config-workspace-scopes": "^20.2.0",
+    "@nx/js": "^22.4.0",
     "eslint": "^9.23.0",
     "husky": "^8.0.3",
-    "lerna": "^9.0.1",
     "lint-staged": ">=10",
+    "nx": "22.4.0",
     "prettier": "^3.0.3",
+    "vite": "^7.0.0",
     "vitest": "^3.1.3"
   },
   "resolutions": {
@@ -38,7 +37,7 @@
   "commitlint": {
     "extends": [
       "@commitlint/config-conventional",
-      "@commitlint/config-lerna-scopes"
+      "@commitlint/config-workspace-scopes"
     ],
     "rules": {
       "header-max-length": [
@@ -48,6 +47,5 @@
       ]
     }
   },
-  "nx": {},
   "packageManager": "yarn@4.7.0"
 }
