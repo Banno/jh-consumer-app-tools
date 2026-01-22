@@ -166,5 +166,5 @@ Licensed under the Apache License, Version 2.0. See individual packages for addi
 
 ## Repository
 
-[GitHub - Banno/jh-consumer-app-tools](https://github.com/Banno/digital-ux)
+[GitHub - Banno/jh-consumer-app-tools](https://github.com/Banno/jh-consumer-app-tools)
 
