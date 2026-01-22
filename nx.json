@@ -2,7 +2,8 @@
   "extends": "nx/presets/npm.json",
   "targetDefaults": {
     "build": {
-      "cache": false
+      "cache": false,
+      "dependsOn": ["^build"]
     },
     "typecheck": {
       "cache": true
@@ -10,5 +11,17 @@
     "test": {
       "cache": true
     }
-  }
+  },
+  "release": {
+    "version": {
+      "conventionalCommits": true,
+      "preVersionCommand": "npx nx run-many -t build"
+    },
+    "changelog": {
+      "projectChangelogs": {
+        "createRelease": "github"
+      }
+    }
+  },
+  "$schema": "./node_modules/nx/schemas/nx-schema.json"
 }

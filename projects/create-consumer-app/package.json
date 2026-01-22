@@ -26,5 +26,8 @@
   "repository": {
     "type": "git+ssh",
     "url": "git@github.com:banno/jh-consumer-app-tools.git"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org"
   }
 }
