@@ -33,8 +33,8 @@
   },
   "types": "./dist/index.d.ts",
   "repository": {
-    "type": "git+ssh",
-    "url": "git@github.com:banno/jh-consumer-app-tools.git"
+    "type": "git",
+    "url": "https://github.com/Banno/jh-consumer-app-tools"
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org"
