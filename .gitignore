@@ -39,3 +39,7 @@ yarn-error.log
 .nx/cache
 .nx/workspace-data
 vitest.config.*.timestamp*
+
+## ignore yarn files in example-consumer-app
+projects/create-consumer-app/example-consumer-app/yarn.lock
+projects/create-consumer-app/example-consumer-app/.yarn
