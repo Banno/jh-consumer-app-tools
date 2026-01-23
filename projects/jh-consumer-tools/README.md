@@ -6,7 +6,7 @@ SPDX-License-Identifier: Apache-2.0
 
 # @jack-henry/consumer-tools
 
-A collection of Vite plugins and web components designed to help build consumer-facing applications within the Jack Henry ecosystem.
+A collection of Vite plugins and web components designed to help build consumer-facing oauth applications within the Jack Henry ecosystem.
 
 ## Overview
 
