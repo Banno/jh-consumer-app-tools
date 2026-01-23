@@ -16,13 +16,17 @@
     "version": {
       "conventionalCommits": true,
       "preVersionCommand": "npx nx run-many -t build",
-      "fallbackCurrentVersionResolver": "disk"
+      "fallbackCurrentVersionResolver": "disk",
+      "versionActionsOptions": {
+        "skipLockFileUpdate": true
+      }
     },
     "changelog": {
       "projectChangelogs": {
         "createRelease": "github"
       }
-    }
+    },
+    "projectsRelationship": "independent"
   },
   "$schema": "./node_modules/nx/schemas/nx-schema.json"
 }
