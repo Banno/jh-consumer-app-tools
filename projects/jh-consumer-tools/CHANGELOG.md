@@ -1,3 +1,13 @@
+## 0.0.5 (2026-01-23)
+
+### 🩹 Fixes
+
+- **jh-consumer-tools:** update docs ([be6b3fe](https://github.com/Banno/jh-consumer-app-tools/commit/be6b3fe))
+
+### ❤️ Thank You
+
+- John Robinson
+
 ## 0.0.4 (2026-01-23)
 
 ### 🚀 Features

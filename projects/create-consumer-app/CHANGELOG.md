@@ -1,3 +1,13 @@
+## 0.0.6 (2026-01-23)
+
+### 🩹 Fixes
+
+- **create-consumer-app:** update docs remove --force flag ([17b1c72](https://github.com/Banno/jh-consumer-app-tools/commit/17b1c72))
+
+### ❤️ Thank You
+
+- John Robinson
+
 ## 0.0.5 (2026-01-23)
 
 ### 🩹 Fixes
