@@ -9,8 +9,8 @@
     ]
   },
   "scripts": {
-    "release": "HUSKY=0 nx release",
-    "nx:release:dry": "HUSKY=0 nx release --dry-run",
+    "release": "HUSKY=0 nx release --verbose",
+    "nx:release:dry": "HUSKY=0 nx release --dry-run --verbose",
     "typecheck": "nx run-many --target=typecheck",
     "build": "nx run-many --target=build",
     "test": "nx run-many --target=test --parallel",
