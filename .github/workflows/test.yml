@@ -11,6 +11,8 @@ on:
       - '**/*.md'
 jobs:
   test:
+    # Skip if the commit author is the publish bot
+    if: github.event_name == 'pull_request' || github.event.head_commit.author.name != 'banno-pub-actions[bot]'
     runs-on: ubuntu-latest
     permissions:
       contents: read
