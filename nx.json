@@ -15,10 +15,12 @@
   "release": {
     "version": {
       "conventionalCommits": true,
-      "preVersionCommand": "npx nx run-many -t build",
-      "fallbackCurrentVersionResolver": "disk"
+      "preVersionCommand": "CI=1 npx nx run-many -t build",
+      "fallbackCurrentVersionResolver": "disk",
+      "updateDependents": "always"
     },
     "changelog": {
+      "automaticFromRef": true,
       "projectChangelogs": {
         "createRelease": "github"
       }
