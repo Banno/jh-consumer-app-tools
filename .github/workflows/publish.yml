@@ -18,10 +18,23 @@ jobs:
     env:
       FORCE_COLOR: '1'
     steps:
+      - name: Generate GitHub App Token
+        id: app-token
+        uses: actions/create-github-app-token@v2
+        with:
+          app-id: ${{ vars.APP_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+
+      - name: Get GitHub App User ID
+        id: get-user-id
+        run: echo "user-id=$(gh api "/users/${{ steps.app-token.outputs.app-slug }}[bot]" --jq .id)" >> "$GITHUB_OUTPUT"
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          ssh-key: ${{ secrets.PUB_ACTIONS_DEPLOY_KEY }}
+          token: ${{ steps.app-token.outputs.token }}
       - name: Enable Corepack
         run: corepack enable
       - name: Use Node.js 24
@@ -33,12 +46,11 @@ jobs:
         run: YARN_ENABLE_COLORS=true yarn install
 
       - name: Publish packages to npm
-
         run: |
           CI=1
-          git config user.name "GitHub Actions"
-          git config user.email "actions@users.noreply.github.com"
+          git config user.name '${{ steps.app-token.outputs.app-slug }}[bot]'
+          git config user.email '${{ steps.get-user-id.outputs.user-id }}+${{ steps.app-token.outputs.app-slug }}[bot]@users.noreply.github.com'
           yarn build
           yarn release
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }} # used by nx release
+          GH_TOKEN: ${{ steps.app-token.outputs.token }} # used by nx release
