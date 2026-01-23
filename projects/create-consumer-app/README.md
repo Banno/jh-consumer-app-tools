@@ -6,7 +6,7 @@ SPDX-License-Identifier: Apache-2.0
 
 # @jack-henry/create-consumer-app
 
-A command-line tool to generate a new consumer application, pre-configured with `@jack-henry/consumer-tools`.
+A command-line tool to generate a Jack Henry oauth consumer application, pre-configured with `@jack-henry/consumer-tools`.
 
 ## Usage
 
