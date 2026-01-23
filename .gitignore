@@ -40,6 +40,8 @@ yarn-error.log
 .nx/workspace-data
 vitest.config.*.timestamp*
 
-## ignore yarn files in example-consumer-app
+## ignore lock files in example-consumer-app
 projects/create-consumer-app/example-consumer-app/yarn.lock
 projects/create-consumer-app/example-consumer-app/.yarn
+projects/create-consumer-app/example-consumer-app/package-lock.json
+projects/create-consumer-app/example-consumer-app/pnpm-lock.yaml
