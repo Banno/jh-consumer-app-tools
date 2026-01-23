@@ -1,3 +1,14 @@
+## 0.0.5 (2026-01-23)
+
+### 🩹 Fixes
+
+- remove example-platform-app from projects ([1727b8c](https://github.com/Banno/jh-consumer-app-tools/commit/1727b8c))
+- replace lerna with nx ([f3bb00f](https://github.com/Banno/jh-consumer-app-tools/commit/f3bb00f))
+
+### ❤️ Thank You
+
+- John Robinson
+
 # Change Log
 
 All notable changes to this project will be documented in this file.
