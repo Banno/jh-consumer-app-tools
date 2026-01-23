@@ -16,10 +16,7 @@
     "version": {
       "conventionalCommits": true,
       "preVersionCommand": "npx nx run-many -t build",
-      "fallbackCurrentVersionResolver": "disk",
-      "versionActionsOptions": {
-        "skipLockFileUpdate": true
-      }
+      "fallbackCurrentVersionResolver": "disk"
     },
     "changelog": {
       "projectChangelogs": {
