@@ -8,10 +8,12 @@ import { institutionAssetsPlugin, institutionThemePlugin } from '@jack-henry/con
 import { checkCerts } from './bin/ssl/check-certs.js';
 
 const apiBaseUrl = 'https://devbank.banno-staging.com';
-const institutionId = '5db40b7a-ee76-42b3-acb9-eb7045011c2a'; //dev bank institutionId
+const institutionId = '899f4398-106d-409a-9ed4-a72346778076'; //garden bank institutionId
 const onlineDomain = 'devbank.banno-staging.com';
 
 export default defineConfig(async ({ mode }) => {
+
+  const env = await loadEnv(mode, process.cwd());
 
   await checkCerts('./certs');
 

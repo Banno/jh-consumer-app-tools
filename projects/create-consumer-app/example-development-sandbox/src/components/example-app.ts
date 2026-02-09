@@ -29,6 +29,8 @@ export class ExampleApp extends LitElement {
     div[slot='jh-card-media'] img {
       height: 100px;
       object-fit: contain;
+      background-color: var(--jh-color-container-primary-enabled);
+      border-radius: 8px;
     }
 
     img[dark] {
