@@ -67,8 +67,8 @@
   --jh-color-container-secondary-hover: var(--footer-background-color);
   --jh-color-container-secondary-enabled: var(--secondary-content-background-color);
   --jh-color-container-primary-selected: var(--menu-item-selected-color);
-  --jh-color-container-primary-active: var(--defaultButtonPressedColor);
-  --jh-color-container-primary-hover: var(--defaultButtonFocusedColor);
+  --jh-color-container-primary-active: var(----menu-item-pressed-color);
+  --jh-color-container-primary-hover: var(----menu-item-pressed-color);
   --jh-color-container-primary-enabled: var(--primary-content-background-color);
   --jh-color-container-page: var(--dashboard-page-background-color);
   /** icons **/
