@@ -1,0 +1,10 @@
+{
+  "version": "v1",
+  "packages": {
+    "@jack-henry/consumer-tools": {
+      "signature": "c030af73a6d0f941dd79fed6543b661d",
+      "file": true,
+      "replaced": "*"
+    }
+  }
+}

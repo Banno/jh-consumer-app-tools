@@ -66,13 +66,22 @@ function loadDsThemes(): string {
 
     try {
       // Resolve the path to our bundled jha-wc components using package exports
-      const cssPath = require.resolve('@jack-henry/jh-tokens/platforms/web/css/jh-theme-light.css');
-
-      if (fs.existsSync(cssPath)) {
-        cssContent = fs.readFileSync(cssPath, 'utf8');
-        basePath = path.dirname(cssPath);
+      const cssPathLight = require.resolve('@jack-henry/jh-tokens/platforms/web/css/jh-theme-light.css');
+      const cssPathDark = require.resolve('@jack-henry/jh-tokens/platforms/web/css/jh-theme-dark.css');
+      if (fs.existsSync(cssPathLight)) {
+        cssContent = fs.readFileSync(cssPathLight, 'utf8');
+        basePath = path.dirname(cssPathLight);
       } else {
-        console.warn(`ds-theme.css not found at expected path: ${cssPath}`);
+        console.warn(`ds-theme.css not found at expected path: ${cssPathLight}`);
+      }
+      if (fs.existsSync(cssPathDark)) {
+        const darkContent = fs.readFileSync(cssPathDark, 'utf8');
+        cssContent += '\n' +
+        `@media (prefers-color-scheme: dark) {
+          ${darkContent.replace('.jh-theme-dark', ':root')}
+        }`;
+      } else {
+        console.warn(`ds-theme.css not found at expected path: ${cssPathDark}`);
       }
     } catch (resolveError) {
       console.warn('Could not resolve @jack-henry/jh-tokens path:', resolveError);
