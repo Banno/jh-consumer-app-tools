@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import * as fs from 'fs';
-import { defineConfig, loadEnv } from 'vite';
+import { defineConfig } from 'vite';
 import { institutionAssetsPlugin, institutionThemePlugin, designSystemThemePlugin } from '@jack-henry/consumer-tools/vite-plugins';
 
 const institutionId = process.env.INSTITUTION_ID; //garden bank institutionId
