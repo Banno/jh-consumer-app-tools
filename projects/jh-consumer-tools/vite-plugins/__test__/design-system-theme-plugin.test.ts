@@ -4,8 +4,6 @@
 
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import designSystemThemePlugin from '../src/design-system-theme-plugin';
-import fs from 'fs';
-import { createRequire } from 'module';
 
 // Mock fs module
 vi.mock('fs', () => ({
@@ -21,25 +19,6 @@ vi.mock('fs', () => ({
   }),
   existsSync: vi.fn(() => true),
 }));
-
-// Mock createRequire
-vi.mock('module', async (importOriginal) => {
-  const actual = await importOriginal();
-  return {
-    ...actual,
-    createRequire: vi.fn(() =>
-      vi.fn((specifier) => {
-        if (specifier === '@jack-henry/jh-tokens/platforms/web/css/jh-theme-light.css') {
-          return '/fake/path/to/jh-theme-light.css';
-        }
-        if (specifier === '@jack-henry/jh-tokens/platforms/web/css/jh-theme-dark.css') {
-          return '/fake/path/to/jh-theme-dark.css';
-        }
-        throw new Error(`Cannot find module '${specifier}'`);
-      }),
-    ),
-  };
-});
 
 describe('designSystemThemePlugin', () => {
   // Helper to call the transformIndexHtml handler
