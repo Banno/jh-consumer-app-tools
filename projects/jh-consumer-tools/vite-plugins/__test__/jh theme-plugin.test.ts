@@ -152,15 +152,14 @@ describe('jhThemePlugin', () => {
   });
 
   describe('calling plugin without options', () => {
-    it('should accept required options', async () => {
+    it('should create plugin when no options are provided', async () => {
       const plugin = await jhThemePlugin();
       expect(plugin).toBeDefined();
       expect(plugin.name).toBe('jh-theme-plugin');
     });
 
-    it('should fetch webserver config from correct URL', async () => {
+    it('should NOT fetch webserver config when no options are provided', async () => {
       await jhThemePlugin();
-
       expect(global.fetch).not.toHaveBeenCalledWith();
     });
   });
@@ -330,7 +329,7 @@ describe('jhThemePlugin', () => {
     });
 
     describe('transformation hooks without the options', () => {
-      it('should inject all only base and page style tags', async () => {
+      it('should inject only base and page style tags', async () => {
       const plugin = await jhThemePlugin();
 
         if (typeof plugin.transformIndexHtml === 'function') {
