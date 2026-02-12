@@ -152,7 +152,7 @@ describe('jhThemePlugin', () => {
   });
 
   describe('calling plugin without options', () => {
-    it('should create plugin when no options are provided', async () => {
+    it('should still create the plugin when no options are provided', async () => {
       const plugin = await jhThemePlugin();
       expect(plugin).toBeDefined();
       expect(plugin.name).toBe('jh-theme-plugin');
