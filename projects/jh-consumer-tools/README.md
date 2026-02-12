@@ -52,7 +52,7 @@ yarn add openid-client
 import { defineConfig } from 'vite';
 import {
   institutionAssetsPlugin,
-  institutionThemePlugin,
+  jhThemePlugin,
   consumerLayoutPlugin,
   consumerAuthPlugin,
 } from '@jack-henry/consumer-tools/vite-plugins';
@@ -60,7 +60,7 @@ import {
 export default defineConfig({
   plugins: [
     institutionAssetsPlugin({ institutionId: 'your-institution-id' }),
-    institutionThemePlugin({ institutionId: 'your-institution-id' }),
+    jhThemePlugin({ institutionId: 'your-institution-id' }),
     consumerLayoutPlugin({
       rootTagName: 'your-app',
       institutionId: 'your-institution-id',

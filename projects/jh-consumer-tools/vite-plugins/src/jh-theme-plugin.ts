@@ -20,7 +20,7 @@ const BannoOnlineStyles = fs.readFileSync(path.resolve(__dirname, '../css/banno-
 
 const jhaWcStyles = fs.readFileSync(path.resolve(__dirname, '../css/fi-theme.css'), 'utf-8');
 
-interface InstitutionThemePluginOptions {
+interface JhThemePluginOptions {
   institutionId: string;
   apiBaseUrl: string;
 }
@@ -186,83 +186,93 @@ async function buildInstitutionTheme(themeData: ThemeSet) {
   return cssVariables;
 }
 
-export default async function institutionThemePlugin(options: InstitutionThemePluginOptions): Promise<Plugin> {
-  const webserverConfig = await fetchWebServerConfig(options.apiBaseUrl, options.institutionId);
-  const themeCSS = await buildInstitutionTheme(webserverConfig.properties.themes);
+export default async function jhThemePlugin(options?: JhThemePluginOptions): Promise<Plugin> {
   const dsThemeCSS = loadDsThemes();
+
+  const baseTransforms = [{
+    tag: 'link',
+    attrs: {
+      rel: 'preload',
+      href: `/fonts/roboto-medium-webfont-ea04e4ff.woff2`,
+      as: 'font',
+      type: 'font/woff2',
+      crossorigin: '',
+    },
+  },
+  {
+    tag: 'style',
+    attrs: { id: 'ds-theme' },
+    children: dsThemeCSS,
+  }];
+
+  const pageTransforms = [ {
+      tag: 'style',
+      attrs: { id: 'page-theme' },
+      children: 'body { background-color: var(--jha-background-color); }',
+    },
+    {
+      tag: 'style',
+      attrs: { id: 'view-transitions' },
+      children: `
+      @view-transition {
+        navigation: auto;
+      }`,
+    },
+    // add the dialog element
+    {
+      tag: 'dialog',
+      injectTo: 'body',
+    },
+  ];
+
+  let institutionThemeTransforms = [];
+
+  if (options?.apiBaseUrl && options?.institutionId) {
+    const webserverConfig = await fetchWebServerConfig(options.apiBaseUrl, options.institutionId);
+    const themeCSS = await buildInstitutionTheme(webserverConfig.properties.themes);
+    institutionThemeTransforms = [{
+      tag: 'style',
+      attrs: { id: 'banno-style' },
+      children: BannoOnlineStyles,
+    },
+    {
+      tag: 'style',
+      attrs: { id: 'institution-theme' },
+      children: themeCSS,
+    },
+    {
+      tag: 'style',
+      attrs: { id: 'jha-wc-theme' },
+      children: jhaWcStyles,
+    },
+    {
+      tag: 'style',
+      attrs: { id: 'ds-theme-map' },
+      children: dsMappings,
+    }, // inject initial institution config
+    {
+      tag: 'script',
+      children: `window.banno = {web:{config:${JSON.stringify(webserverConfig.properties)}}};`,
+    },
+    // override jha-platform-font as set by fi-theme above
+    {
+      tag: 'style',
+      children: `
+      * {
+        --jha-platform-font: 'roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+      }
+      `,
+    }];
+  }
+
   return {
-    name: 'institution-theme-plugin',
+    name: 'jh-theme-plugin',
 
     transformIndexHtml(html) {
       return [
-        {
-          tag: 'link',
-          attrs: {
-            rel: 'preload',
-            href: `/fonts/roboto-medium-webfont-ea04e4ff.woff2`,
-            as: 'font',
-            type: 'font/woff2',
-            crossorigin: '',
-          },
-        },
-        {
-          tag: 'style',
-          attrs: { id: 'ds-theme' },
-          children: dsThemeCSS,
-        },
-        {
-          tag: 'style',
-          attrs: { id: 'banno-style' },
-          children: BannoOnlineStyles,
-        },
-        {
-          tag: 'style',
-          attrs: { id: 'institution-theme' },
-          children: themeCSS,
-        },
-        {
-          tag: 'style',
-          attrs: { id: 'jha-wc-theme' },
-          children: jhaWcStyles,
-        },
-        {
-          tag: 'style',
-          attrs: { id: 'ds-theme-map' },
-          children: dsMappings,
-        },
-        // ensure the background of the body is styled to match the theme color
-        {
-          tag: 'style',
-          attrs: { id: 'page-theme' },
-          children: 'body { background-color: var(--jha-background-color); }',
-        },
-        {
-          tag: 'style',
-          attrs: { id: 'view-transitions' },
-          children: `
-          @view-transition {
-            navigation: auto;
-          }`,
-        },
-        // inject initial institution config
-        {
-          tag: 'script',
-          children: `window.banno = {web:{config:${JSON.stringify(webserverConfig.properties)}}};`,
-        },
-        // override jha-platform-font as set by fi-theme above
-        {
-          tag: 'style',
-          children: `
-          * {
-            --jha-platform-font: 'roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-          }
-          `,
-        },
-        // add the dialog element
-        {
-          tag: 'dialog',
-          injectTo: 'body',
-        },
+        ...baseTransforms,
+        ...institutionThemeTransforms,
+        ...pageTransforms,
       ];
     },
   };

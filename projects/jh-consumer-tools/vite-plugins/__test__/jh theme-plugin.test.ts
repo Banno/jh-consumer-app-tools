@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import institutionThemePlugin from '../src/institution-theme-plugin';
+import jhThemePlugin from '../src/jh-theme-plugin';
 import type { WebserverConfigResponse } from '../../types/institution';
 
 // Mock fs module
@@ -19,7 +19,7 @@ vi.mock('fs', () => ({
 // Mock fetch
 global.fetch = vi.fn();
 
-describe('institutionThemePlugin', () => {
+describe('jhThemePlugin', () => {
   const mockOptions = {
     institutionId: 'test-institution',
     apiBaseUrl: 'test.banno.com',
@@ -35,7 +35,7 @@ describe('institutionThemePlugin', () => {
   };
 
   // Helper to call the transformIndexHtml handler
-  const transformHtml = (plugin: Awaited<ReturnType<typeof institutionThemePlugin>>, html: string): any => {
+  const transformHtml = (plugin: Awaited<ReturnType<typeof jhThemePlugin>>, html: string): any => {
     if (typeof plugin.transformIndexHtml === 'function') {
       return plugin.transformIndexHtml.call({} as any, html, mockContext);
     }
@@ -90,12 +90,12 @@ describe('institutionThemePlugin', () => {
 
   describe('plugin structure', () => {
     it('should return a plugin with correct name', async () => {
-      const plugin = await institutionThemePlugin(mockOptions);
-      expect(plugin.name).toBe('institution-theme-plugin');
+      const plugin = await jhThemePlugin(mockOptions);
+      expect(plugin.name).toBe('jh-theme-plugin');
     });
 
     it('should have a transformIndexHtml function', async () => {
-      const plugin = await institutionThemePlugin(mockOptions);
+      const plugin = await jhThemePlugin(mockOptions);
       expect(plugin.transformIndexHtml).toBeDefined();
       expect(typeof plugin.transformIndexHtml).toBe('function');
     });
@@ -108,13 +108,13 @@ describe('institutionThemePlugin', () => {
         apiBaseUrl: 'example.banno.com',
       };
 
-      const plugin = await institutionThemePlugin(requiredOptions);
+      const plugin = await jhThemePlugin(requiredOptions);
       expect(plugin).toBeDefined();
-      expect(plugin.name).toBe('institution-theme-plugin');
+      expect(plugin.name).toBe('jh-theme-plugin');
     });
 
     it('should fetch webserver config from correct URL', async () => {
-      await institutionThemePlugin(mockOptions);
+      await jhThemePlugin(mockOptions);
 
       expect(global.fetch).toHaveBeenCalledWith(
         `https://${mockOptions.apiBaseUrl}/api/config/${mockOptions.institutionId}`,
@@ -132,11 +132,11 @@ describe('institutionThemePlugin', () => {
       };
 
       vi.clearAllMocks();
-      await institutionThemePlugin(options1);
+      await jhThemePlugin(options1);
       expect(global.fetch).toHaveBeenCalledWith(expect.stringContaining('bank-abc'));
 
       vi.clearAllMocks();
-      await institutionThemePlugin(options2);
+      await jhThemePlugin(options2);
       expect(global.fetch).toHaveBeenCalledWith(expect.stringContaining('bank-xyz'));
     });
 
@@ -146,14 +146,28 @@ describe('institutionThemePlugin', () => {
         apiBaseUrl: 'custom.example.com',
       };
 
-      await institutionThemePlugin(customOptions);
+      await jhThemePlugin(customOptions);
       expect(global.fetch).toHaveBeenCalledWith(expect.stringContaining('custom.example.com'));
+    });
+  });
+
+  describe('calling plugin without options', () => {
+    it('should accept required options', async () => {
+      const plugin = await jhThemePlugin();
+      expect(plugin).toBeDefined();
+      expect(plugin.name).toBe('jh-theme-plugin');
+    });
+
+    it('should fetch webserver config from correct URL', async () => {
+      await jhThemePlugin();
+
+      expect(global.fetch).not.toHaveBeenCalledWith();
     });
   });
 
   describe('transformIndexHtml hook', () => {
     it('should return an array of HTML tags', async () => {
-      const plugin = await institutionThemePlugin(mockOptions);
+      const plugin = await jhThemePlugin(mockOptions);
 
       if (typeof plugin.transformIndexHtml === 'function') {
         const result = transformHtml(plugin, '<html></html>');
@@ -163,7 +177,7 @@ describe('institutionThemePlugin', () => {
     });
 
     it('should inject font preload link', async () => {
-      const plugin = await institutionThemePlugin(mockOptions);
+      const plugin = await jhThemePlugin(mockOptions);
 
       if (typeof plugin.transformIndexHtml === 'function') {
         const result = transformHtml(plugin, '<html></html>');
@@ -177,7 +191,7 @@ describe('institutionThemePlugin', () => {
     });
 
     it('should inject ds-theme style tag', async () => {
-      const plugin = await institutionThemePlugin(mockOptions);
+      const plugin = await jhThemePlugin(mockOptions);
 
       if (typeof plugin.transformIndexHtml === 'function') {
         const result = transformHtml(plugin, '<html></html>');
@@ -189,7 +203,7 @@ describe('institutionThemePlugin', () => {
     });
 
     it('should inject banno-style style tag', async () => {
-      const plugin = await institutionThemePlugin(mockOptions);
+      const plugin = await jhThemePlugin(mockOptions);
 
       if (typeof plugin.transformIndexHtml === 'function') {
         const result = transformHtml(plugin, '<html></html>');
@@ -201,7 +215,7 @@ describe('institutionThemePlugin', () => {
     });
 
     it('should inject institution-theme style tag', async () => {
-      const plugin = await institutionThemePlugin(mockOptions);
+      const plugin = await jhThemePlugin(mockOptions);
 
       if (typeof plugin.transformIndexHtml === 'function') {
         const result = transformHtml(plugin, '<html></html>');
@@ -216,7 +230,7 @@ describe('institutionThemePlugin', () => {
     });
 
     it('should inject jha-wc-theme style tag', async () => {
-      const plugin = await institutionThemePlugin(mockOptions);
+      const plugin = await jhThemePlugin(mockOptions);
 
       if (typeof plugin.transformIndexHtml === 'function') {
         const result = transformHtml(plugin, '<html></html>');
@@ -228,7 +242,7 @@ describe('institutionThemePlugin', () => {
     });
 
     it('should inject ds-theme-map style tag', async () => {
-      const plugin = await institutionThemePlugin(mockOptions);
+      const plugin = await jhThemePlugin(mockOptions);
 
       if (typeof plugin.transformIndexHtml === 'function') {
         const result = transformHtml(plugin, '<html></html>');
@@ -240,7 +254,7 @@ describe('institutionThemePlugin', () => {
     });
 
     it('should inject page-theme style tag', async () => {
-      const plugin = await institutionThemePlugin(mockOptions);
+      const plugin = await jhThemePlugin(mockOptions);
 
       if (typeof plugin.transformIndexHtml === 'function') {
         const result = transformHtml(plugin, '<html></html>');
@@ -253,7 +267,7 @@ describe('institutionThemePlugin', () => {
     });
 
     it('should inject view-transitions style tag', async () => {
-      const plugin = await institutionThemePlugin(mockOptions);
+      const plugin = await jhThemePlugin(mockOptions);
 
       if (typeof plugin.transformIndexHtml === 'function') {
         const result = transformHtml(plugin, '<html></html>');
@@ -266,7 +280,7 @@ describe('institutionThemePlugin', () => {
     });
 
     it('should inject window.banno script tag', async () => {
-      const plugin = await institutionThemePlugin(mockOptions);
+      const plugin = await jhThemePlugin(mockOptions);
 
       if (typeof plugin.transformIndexHtml === 'function') {
         const result = transformHtml(plugin, '<html></html>');
@@ -280,7 +294,7 @@ describe('institutionThemePlugin', () => {
     });
 
     it('should inject platform-font override style tag', async () => {
-      const plugin = await institutionThemePlugin(mockOptions);
+      const plugin = await jhThemePlugin(mockOptions);
 
       if (typeof plugin.transformIndexHtml === 'function') {
         const result = transformHtml(plugin, '<html></html>');
@@ -294,7 +308,7 @@ describe('institutionThemePlugin', () => {
     });
 
     it('should inject dialog element into body', async () => {
-      const plugin = await institutionThemePlugin(mockOptions);
+      const plugin = await jhThemePlugin(mockOptions);
 
       if (typeof plugin.transformIndexHtml === 'function') {
         const result = transformHtml(plugin, '<html></html>');
@@ -305,7 +319,7 @@ describe('institutionThemePlugin', () => {
     });
 
     it('should inject all required tags', async () => {
-      const plugin = await institutionThemePlugin(mockOptions);
+      const plugin = await jhThemePlugin(mockOptions);
 
       if (typeof plugin.transformIndexHtml === 'function') {
         const result = transformHtml(plugin, '<html></html>');
@@ -314,11 +328,24 @@ describe('institutionThemePlugin', () => {
         expect(result.length).toEqual(11);
       }
     });
+
+    describe('transformation hooks without the options', () => {
+      it('should inject all only base and page style tags', async () => {
+      const plugin = await jhThemePlugin();
+
+        if (typeof plugin.transformIndexHtml === 'function') {
+          const result = transformHtml(plugin, '<html></html>');
+
+          // Should have at least 5 tags (font preload + ds styles + dialog + view-transitions + page-theme)
+          expect(result.length).toEqual(5);
+        }
+      });
+    });
   });
 
   describe('theme CSS generation', () => {
     it('should convert camelCase properties to kebab-case CSS variables', async () => {
-      const plugin = await institutionThemePlugin(mockOptions);
+      const plugin = await jhThemePlugin(mockOptions);
 
       if (typeof plugin.transformIndexHtml === 'function') {
         const result = transformHtml(plugin, '<html></html>');
@@ -331,7 +358,7 @@ describe('institutionThemePlugin', () => {
     });
 
     it('should handle nested theme properties', async () => {
-      const plugin = await institutionThemePlugin(mockOptions);
+      const plugin = await jhThemePlugin(mockOptions);
 
       if (typeof plugin.transformIndexHtml === 'function') {
         const result = transformHtml(plugin, '<html></html>');
@@ -344,7 +371,7 @@ describe('institutionThemePlugin', () => {
     });
 
     it('should create :root selector for light theme', async () => {
-      const plugin = await institutionThemePlugin(mockOptions);
+      const plugin = await jhThemePlugin(mockOptions);
 
       if (typeof plugin.transformIndexHtml === 'function') {
         const result = transformHtml(plugin, '<html></html>');
@@ -355,7 +382,7 @@ describe('institutionThemePlugin', () => {
     });
 
     it('should create media query for dark theme', async () => {
-      const plugin = await institutionThemePlugin(mockOptions);
+      const plugin = await jhThemePlugin(mockOptions);
 
       if (typeof plugin.transformIndexHtml === 'function') {
         const result = transformHtml(plugin, '<html></html>');
@@ -387,7 +414,7 @@ describe('institutionThemePlugin', () => {
         json: () => Promise.resolve(customConfig),
       });
 
-      const plugin = await institutionThemePlugin(mockOptions);
+      const plugin = await jhThemePlugin(mockOptions);
 
       if (typeof plugin.transformIndexHtml === 'function') {
         const result = transformHtml(plugin, '<html></html>');
@@ -399,7 +426,7 @@ describe('institutionThemePlugin', () => {
     });
 
     it('should handle array values as gradients', async () => {
-      const plugin = await institutionThemePlugin(mockOptions);
+      const plugin = await jhThemePlugin(mockOptions);
 
       if (typeof plugin.transformIndexHtml === 'function') {
         const result = transformHtml(plugin, '<html></html>');
@@ -412,7 +439,7 @@ describe('institutionThemePlugin', () => {
     });
 
     it('should handle numeric values', async () => {
-      const plugin = await institutionThemePlugin(mockOptions);
+      const plugin = await jhThemePlugin(mockOptions);
 
       if (typeof plugin.transformIndexHtml === 'function') {
         const result = transformHtml(plugin, '<html></html>');
@@ -424,7 +451,7 @@ describe('institutionThemePlugin', () => {
     });
 
     it('should handle string values', async () => {
-      const plugin = await institutionThemePlugin(mockOptions);
+      const plugin = await jhThemePlugin(mockOptions);
 
       if (typeof plugin.transformIndexHtml === 'function') {
         const result = transformHtml(plugin, '<html></html>');
@@ -438,7 +465,7 @@ describe('institutionThemePlugin', () => {
 
   describe('webserver config integration', () => {
     it('should embed webserver config in window.banno', async () => {
-      const plugin = await institutionThemePlugin(mockOptions);
+      const plugin = await jhThemePlugin(mockOptions);
 
       if (typeof plugin.transformIndexHtml === 'function') {
         const result = transformHtml(plugin, '<html></html>');
@@ -466,7 +493,7 @@ describe('institutionThemePlugin', () => {
         json: () => Promise.resolve(customConfig),
       });
 
-      const plugin = await institutionThemePlugin(mockOptions);
+      const plugin = await jhThemePlugin(mockOptions);
 
       if (typeof plugin.transformIndexHtml === 'function') {
         const result = transformHtml(plugin, '<html></html>');
@@ -484,13 +511,13 @@ describe('institutionThemePlugin', () => {
         statusText: 'Not Found',
       });
 
-      await expect(institutionThemePlugin(mockOptions)).rejects.toThrow('Failed to fetch web server config');
+      await expect(jhThemePlugin(mockOptions)).rejects.toThrow('Failed to fetch web server config');
     });
 
     it('should throw error on network failure', async () => {
       (global.fetch as any).mockRejectedValue(new Error('Network error'));
 
-      await expect(institutionThemePlugin(mockOptions)).rejects.toThrow();
+      await expect(jhThemePlugin(mockOptions)).rejects.toThrow();
     });
 
     it('should handle invalid JSON response', async () => {
@@ -499,13 +526,13 @@ describe('institutionThemePlugin', () => {
         json: () => Promise.reject(new Error('Invalid JSON')),
       });
 
-      await expect(institutionThemePlugin(mockOptions)).rejects.toThrow();
+      await expect(jhThemePlugin(mockOptions)).rejects.toThrow();
     });
   });
 
   describe('tag ordering', () => {
     it('should inject tags in correct order', async () => {
-      const plugin = await institutionThemePlugin(mockOptions);
+      const plugin = await jhThemePlugin(mockOptions);
 
       if (typeof plugin.transformIndexHtml === 'function') {
         const result = transformHtml(plugin, '<html></html>');
