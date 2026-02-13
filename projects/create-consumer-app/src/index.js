@@ -257,22 +257,14 @@ async function run() {
 
     await fs.writeJson(packageJsonPath, packageJson, { spaces: 2 });
 
-    const viteConfigPath = path.join(projectDir, 'vite.config.ts');
-    let viteConfig = await fs.readFile(viteConfigPath, 'utf8');
-
-    viteConfig = viteConfig.replace(/institutionId: '.*'/, `institutionId: '${institutionId}'`);
-    viteConfig = viteConfig.replace(/client_id: '.*'/, `client_id: '${clientId}'`);
-    viteConfig = viteConfig.replace(/apiBaseUrl = '.*'/, `apiBaseUrl = '${apiBaseUrl}'`);
-    viteConfig = viteConfig.replace(
-      /redirect_uris: \['.*'\]/,
-      `redirect_uris: [${redirectUris.map((uri) => `'${uri}'`).join(', ')}]`,
-    );
-
-    await fs.writeFile(viteConfigPath, viteConfig);
-
-    // Create .env file with client_secret
+    // Create .env file with all configuration variables
     const envPath = path.join(projectDir, '.env');
-    const envContent = `VITE_CLIENT_SECRET=${clientSecret}\n`;
+    const envContent = `INSTITUTION_ID=${institutionId}
+CLIENT_ID=${clientId}
+CLIENT_SECRET=${clientSecret}
+API_URL=${apiBaseUrl}
+REDIRECT_URIS=${JSON.stringify(redirectUris)}
+`;
     await fs.writeFile(envPath, envContent);
 
     // Ensure .env is in .gitignore

@@ -119,6 +119,59 @@ export default defineConfig({
 });
 ```
 
+#### Handling Sensitive Credentials
+
+**Important**: Never commit sensitive credentials like `client_secret` directly in your code. Use environment variables instead:
+
+```typescript
+import { defineConfig, loadEnv } from 'vite';
+import consumerConfig from '@jack-henry/consumer-tools/vite-plugins';
+
+export default defineConfig(async ({ mode }) => {
+  // Load environment variables (use empty string to load all vars, not just VITE_*)
+  const env = loadEnv(mode, process.cwd(), '');
+
+  return {
+    plugins: [
+      ...consumerConfig({
+        rootTagName: 'your-app',
+        institutionId: env.INSTITUTION_ID,
+        auth: {
+          apiBaseUrl: env.API_URL,
+          clientConfig: {
+            client_id: env.CLIENT_ID,
+            client_secret: env.CLIENT_SECRET,
+            grant_types: ['authorization_code'],
+            response_types: ['code'],
+            token_endpoint_auth_method: 'client_secret_post',
+            redirect_uris: JSON.parse(env.REDIRECT_URIS),
+          },
+        },
+      }),
+    ],
+  };
+});
+```
+
+Create a `.env` file in your project root:
+
+```
+INSTITUTION_ID=your-institution-id
+CLIENT_ID=your-client-id
+CLIENT_SECRET=your-client-secret
+API_URL=https://your-api-base-url.com
+REDIRECT_URIS=["https://localhost:8445/auth/cb"]
+```
+
+**Note**: These variables do not use the `VITE_` prefix because they are only used in the Vite configuration and are never exposed to client code. Variables with the `VITE_` prefix are embedded into your client bundle and should not contain sensitive information.
+
+Make sure to add `.env` to your `.gitignore`:
+
+```
+.env
+.env.local
+```
+
 ### Using Web Components
 
 ```typescript

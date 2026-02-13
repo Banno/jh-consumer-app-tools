@@ -53,11 +53,27 @@ yarn preview
 
 ## Configuration
 
-Your authentication and institution configuration is stored in two files:
+Your authentication and institution configuration is managed through environment variables and Vite configuration:
+
+### .env
+
+Contains all configuration values including sensitive credentials that should never be committed to version control:
+
+```
+INSTITUTION_ID=your-institution-id
+CLIENT_ID=your-client-id
+CLIENT_SECRET=your-client-secret
+API_URL=https://your-domain.banno.com
+REDIRECT_URIS=["https://localhost:8445/auth/cb"]
+```
+
+**Important**: The `.env` file is automatically added to `.gitignore` to protect your credentials.
+
+**Note**: These environment variables do not use the `VITE_` prefix because they are only used in the Vite configuration and are never exposed to client code. This is more secure than using the `VITE_` prefix, which would make them accessible in the browser bundle.
 
 ### vite.config.ts
 
-Contains your OAuth client configuration and institution settings:
+Reads configuration from environment variables and passes them to the consumer tools plugins:
 
 - **Institution ID**: Your financial institution's unique identifier
 - **Client ID**: OAuth client identifier for your application
@@ -68,29 +84,19 @@ Example:
 ```typescript
 consumerPlugins({
   rootTagName: 'example-consumer-app',
-  institutionId: 'your-institution-id',
+  institutionId: env.INSTITUTION_ID,
   onlineDomain: 'your-domain.banno.com',
   auth: {
-    apiBaseUrl: 'https://your-domain.banno.com',
+    apiBaseUrl: env.API_URL,
     clientConfig: {
-      client_id: 'your-client-id',
-      client_secret: env.VITE_CLIENT_SECRET,
+      client_id: env.CLIENT_ID,
+      client_secret: env.CLIENT_SECRET,
       redirect_uris: ['https://localhost:8445/auth/cb'],
       // ...
     },
   },
 })
 ```
-
-### .env
-
-Contains sensitive credentials that should never be committed to version control:
-
-```
-VITE_CLIENT_SECRET=your-client-secret
-```
-
-**Important**: The `.env` file is automatically added to `.gitignore` to protect your credentials.
 
 ## Project Structure
 
@@ -163,11 +169,18 @@ The consumer tools library handles this flow automatically.
 
 ## Modifying Configuration
 
-If you need to update your OAuth client or institution configuration:
+If you need to update your OAuth client or institution configuration, all values are stored in the `.env` file:
 
-1. **Client ID, Institution ID, API Base URL, Redirect URIs**: Update in `vite.config.ts`
-2. **Client Secret**: Update in `.env` file
+1. Open the `.env` file in your project root
+2. Update any of the following variables:
+   - `INSTITUTION_ID` - Your financial institution's unique identifier
+   - `CLIENT_ID` - OAuth client identifier
+   - `CLIENT_SECRET` - OAuth client secret
+   - `API_URL` - Your Banno Online domain
+   - `REDIRECT_URIS` - Authorized callback URLs (JSON array format)
 3. Restart the development server for changes to take effect
+
+**Note**: These values are only used in `vite.config.ts` during build/dev and are never exposed to client code.
 
 ## Learn More
 
