@@ -4,7 +4,8 @@
   "private": true,
   "workspaces": {
     "packages": [
-      "projects/*"
+      "projects/*",
+      "projects/create-consumer-app/example-consumer-app"
     ]
   },
   "scripts": {
