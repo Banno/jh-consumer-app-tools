@@ -12,7 +12,7 @@
     "release": "HUSKY=0 nx release --yes --verbose",
     "nx:release:dry": "HUSKY=0 nx release --dry-run --verbose",
     "typecheck": "nx run-many --target=typecheck",
-    "build": "nx run-many --target=build",
+    "build": "nx run-many --target=build --exclude=example-consumer-app",
     "test": "nx run-many --target=test --parallel",
     "prepare": "husky install",
     "postinstall": "npm run build",
