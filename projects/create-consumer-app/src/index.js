@@ -90,13 +90,13 @@ async function run() {
     const redirectUris = [];
     const firstRedirectUri = await input({
       message: 'Enter your primary redirect URI (at least one is required):',
-      default: 'https://',
+      default: 'https://localhost:8445/auth/cb',
       validate: (value) => {
         if (!value || value === 'https://') {
           return 'A complete redirect URI is required.';
         }
-        if (!value.startsWith('http')) {
-          return 'Please enter a valid URL starting with http:// or https://.';
+        if (!value.startsWith('https')) {
+          return 'Please enter a valid URL starting with https://.';
         }
         return true;
       },
@@ -226,10 +226,35 @@ async function run() {
       await fs.rename(oldPath, newPath);
     }
 
+    // Detect package manager version
+    let detectedPackageManagerVersion = null;
+    const versionCommand = packageManagerChoice === 'npm' ? 'npm --version' : 'yarn --version';
+
+    await new Promise((resolve, reject) => {
+      exec(versionCommand, (error, stdout) => {
+        if (error) {
+          reject(new Error(`Failed to check ${packageManagerChoice === 'npm' ? 'npm' : 'yarn'} version`));
+          return;
+        }
+        detectedPackageManagerVersion = stdout.trim();
+        resolve();
+      });
+    });
+
     const packageJsonPath = path.join(projectDir, 'package.json');
     const packageJson = await fs.readJson(packageJsonPath);
     packageJson.name = kebabCaseProjectName;
     delete packageJson.private;
+
+    // Set packageManager field with detected version
+    if (packageManagerChoice === 'npm') {
+      packageJson.packageManager = `npm@${detectedPackageManagerVersion}`;
+    } else if (packageManagerChoice === 'yarn (v1)') {
+      packageJson.packageManager = `yarn@${detectedPackageManagerVersion}`;
+    } else if (packageManagerChoice === 'yarn (v4)') {
+      packageJson.packageManager = `yarn@${detectedPackageManagerVersion}`;
+    }
+
     await fs.writeJson(packageJsonPath, packageJson, { spaces: 2 });
 
     const viteConfigPath = path.join(projectDir, 'vite.config.ts');
@@ -273,7 +298,15 @@ async function run() {
       fs.writeFileSync(path.join(projectDir, '.yarnrc.yml'), 'nodeLinker: node-modules');
     } else {
       // 'yarn (v1)'
-      installCommand = 'yarn install';
+      const majorVersion = parseInt(detectedPackageManagerVersion.split('.')[0], 10);
+
+      if (majorVersion > 1) {
+        // User has yarn v2+, need to configure project to use v1
+        installCommand = 'yarn set version classic && yarn install';
+      } else {
+        // User already has yarn v1
+        installCommand = 'yarn install';
+      }
       packageManagerName = 'yarn';
     }
 
