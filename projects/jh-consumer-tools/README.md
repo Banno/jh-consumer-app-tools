@@ -130,6 +130,186 @@ import '@jack-henry/consumer-tools/components/jh-consumer-layout';
 </jh-consumer-layout>
 ```
 
+## Contexts Provided by jh-consumer-layout
+
+The `jh-consumer-layout` component provides three contexts using Lit's context API that child components can consume to access shared application state.
+
+### User Context
+
+Access the current user's authentication state and information.
+
+**Import:**
+```typescript
+import { consume } from '@lit/context';
+import { userContext, type UserContext } from '@jack-henry/consumer-tools/contexts/user';
+```
+
+**Usage in a Lit component:**
+```typescript
+@consume({ context: userContext, subscribe: true })
+@property({ attribute: false })
+user: UserContext;
+```
+
+**Interface:**
+```typescript
+interface UserContext {
+  user: User | null;  // User object with profile information
+  state: 'unauthenticated' | 'authenticated' | 'loading' | 'checking';
+}
+
+interface User {
+  sub: string;                // User ID (subject)
+  given_name: string;         // First name
+  family_name: string;        // Last name
+  name: string;               // Full name
+  email: string;              // Email address
+  nickname: string;           // Username/nickname
+  picture: string;            // Profile picture URL
+  preferred_username: string; // Preferred display name
+  // ... additional OAuth user claims
+}
+```
+
+**States:**
+- `unauthenticated` - User is not logged in
+- `loading` - Initial authentication check in progress
+- `checking` - Re-validating authentication status
+- `authenticated` - User is logged in and validated
+
+### Institution Context
+
+Access the current financial institution's configuration and branding.
+
+**Import:**
+```typescript
+import { consume } from '@lit/context';
+import { institutionContext, type InstitutionContext } from '@jack-henry/consumer-tools/contexts/institution';
+```
+
+**Usage in a Lit component:**
+```typescript
+@consume({ context: institutionContext, subscribe: true })
+@property({ attribute: false })
+institution: InstitutionContext;
+```
+
+**Interface:**
+```typescript
+interface InstitutionContext {
+  institution: Institution | null;  // Institution configuration
+  state: 'initial' | 'loading' | 'ready' | 'error';
+}
+
+interface Institution {
+  // Branding
+  name: string;
+  logo: string;
+  images: {
+    logoUrl: string;
+    faviconUrl: string;
+    // ... additional branding images
+  };
+
+  // Features and abilities
+  abilities: {
+    billPay: boolean;
+    mobileDeposit: boolean;
+    cardControls: boolean;
+    // ... many more feature flags
+  };
+
+  // Links and resources
+  links: InstitutionLink[];
+
+  // ... extensive configuration options
+}
+```
+
+**States:**
+- `initial` - Not yet loaded
+- `loading` - Fetching institution data
+- `ready` - Institution data loaded successfully
+- `error` - Failed to load institution data
+
+### Router Context
+
+Access the router instance and route configuration.
+
+**Import:**
+```typescript
+import { consume } from '@lit/context';
+import { routerContext, type RouterContext } from '@jack-henry/consumer-tools/contexts/router';
+```
+
+**Usage in a Lit component:**
+```typescript
+@consume({ context: routerContext, subscribe: true })
+@property({ attribute: false })
+routerContext: RouterContext;
+```
+
+**Interface:**
+```typescript
+interface RouterContext {
+  router: Router | null;      // Router instance for programmatic navigation
+  config: RouteConfig | null; // Your application's route configuration
+}
+```
+
+**Usage example:**
+```typescript
+// Navigate programmatically
+this.routerContext.router.go('/dashboard');
+
+// Access route configuration
+const routes = this.routerContext.config;
+```
+
+### Complete Component Example
+
+Here's a complete example of a component consuming all three contexts:
+
+```typescript
+import { LitElement, html } from 'lit';
+import { customElement, property } from 'lit/decorators.js';
+import { consume } from '@lit/context';
+import { userContext, type UserContext } from '@jack-henry/consumer-tools/contexts/user';
+import { institutionContext, type InstitutionContext } from '@jack-henry/consumer-tools/contexts/institution';
+import { routerContext, type RouterContext } from '@jack-henry/consumer-tools/contexts/router';
+
+@customElement('my-dashboard')
+export class MyDashboard extends LitElement {
+  @consume({ context: userContext, subscribe: true })
+  @property({ attribute: false })
+  user: UserContext;
+
+  @consume({ context: institutionContext, subscribe: true })
+  @property({ attribute: false })
+  institution: InstitutionContext;
+
+  @consume({ context: routerContext, subscribe: true })
+  @property({ attribute: false })
+  routerContext: RouterContext;
+
+  render() {
+    if (this.user.state !== 'authenticated') {
+      return html`<p>Please log in</p>`;
+    }
+
+    return html`
+      <h1>Welcome, ${this.user.user.given_name}!</h1>
+      <p>Banking with ${this.institution.institution?.name}</p>
+      <button @click=${() => this.routerContext.router.go('/settings')}>
+        Go to Settings
+      </button>
+    `;
+  }
+}
+```
+
+> **Note:** `router.go` is used as an example of programmatic navigation, but that is only here for demonstration purposes. In most cases you should use `<a href="/settings">` for navigation to ensure proper accessibility, bookmarking, and expected web behavior.
+
 ## Consumer Auth Plugin Details
 
 The Consumer Auth Plugin provides OIDC authentication functionality for consumer applications, handling the OAuth flow, token management, and API proxying for Banno consumer APIs.
