@@ -64,26 +64,40 @@ yarn add @jack-henry/consumer-tools openid-client
 Configure your `vite.config.ts`:
 
 ```typescript
-import { defineConfig } from 'vite';
+import { defineConfig, loadEnv } from 'vite';
 import consumerConfig from '@jack-henry/consumer-tools/vite-plugins';
 
-export default defineConfig({
-  plugins: [
-    ...consumerConfig({
-      rootTagName: 'my-app',
-      institutionId: 'your-institution-id',
-      routeConfigPath: './src/routing/route-config.ts',
-      auth: {
-        apiBaseUrl: 'https://your-api-base-url.com',
-        clientConfig: {
-          client_id: 'your-client-id',
-          client_secret: 'your-client-secret',
-          // ... additional OIDC config
+export default defineConfig(({ mode }) => {
+  // Load environment variables
+  const env = loadEnv(mode, process.cwd(), '');
+
+  return {
+    plugins: [
+      ...consumerConfig({
+        rootTagName: 'my-app',
+        institutionId: env.INSTITUTION_ID,
+        routeConfigPath: './src/routing/route-config.ts',
+        auth: {
+          apiBaseUrl: env.API_URL,
+          clientConfig: {
+            client_id: env.CLIENT_ID,
+            client_secret: env.CLIENT_SECRET,
+            // ... additional OIDC config
+          },
         },
-      },
-    }),
-  ],
+      }),
+    ],
+  };
 });
+```
+
+Store sensitive credentials in a `.env` file (add to `.gitignore`):
+
+```
+INSTITUTION_ID=your-institution-id
+CLIENT_ID=your-client-id
+CLIENT_SECRET=your-client-secret
+API_URL=https://your-api-base-url.com
 ```
 
 ## Development

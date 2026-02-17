@@ -15,7 +15,7 @@
   "release": {
     "version": {
       "conventionalCommits": true,
-      "preVersionCommand": "CI=1 npx nx run-many -t build",
+      "preVersionCommand": "CI=1 npx nx run-many -t build --exclude=example-consumer-app",
       "fallbackCurrentVersionResolver": "disk",
       "updateDependents": "always"
     },
