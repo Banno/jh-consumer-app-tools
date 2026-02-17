@@ -1,6 +1,6 @@
 {
   "name": "@jack-henry/create-consumer-app",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "license": "Apache-2.0",
   "type": "module",
   "bin": "./bin/cli.js",

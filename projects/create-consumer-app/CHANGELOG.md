@@ -1,3 +1,17 @@
+## 0.0.7 (2026-02-17)
+
+### 🚀 Features
+
+- **create-consumer-app:** store all vars in .env instead of hardcoding in vite config ([01dad88](https://github.com/Banno/jh-consumer-app-tools/commit/01dad88))
+
+### 🩹 Fixes
+
+- **create-consumer-app:** use default for redirectURI ([22f5bee](https://github.com/Banno/jh-consumer-app-tools/commit/22f5bee))
+
+### ❤️ Thank You
+
+- John Robinson
+
 ## 0.0.6 (2026-01-23)
 
 ### 🩹 Fixes
