@@ -22,6 +22,17 @@ A comprehensive toolkit providing Vite plugins and web components for consumer a
 
 [View Documentation →](./projects/jh-consumer-tools/README.md)
 
+### [Cloneable Development Sandbox](./projects/development-sandbox)
+
+A quick example of an application you can clone to get your feet wet.
+
+**Key Features:**
+- 🚀 **Quick Setup** with interactive prompts
+- 🎨 **Theming** support for institution-specific styling or Jack Henry base theme
+- 🧩 **Examples** a mock application built with Lit components and the Design System
+
+[View Documentation →](./projects/development-sandbox/README.md)
+
 ### [@jack-henry/create-consumer-app](./projects/create-consumer-app)
 
 A CLI tool for scaffolding new consumer applications with pre-configured settings.

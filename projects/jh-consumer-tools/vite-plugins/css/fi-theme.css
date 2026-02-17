@@ -193,8 +193,6 @@ body {
   --jh-button-label-color-text-danger-active: var(--primary-content-background-color);
   --jh-button-label-color-text-danger-disabled: var(--primary-content-background-color);
   --jh-button-progress-color-border-danger-pending: var(--primary-content-background-color);
-  --jh-card-border-radius: var(--card-corner-radius);
-  --jh-card-shadow: var(--card-shadow);
   --jh-divider-color-border: var(--divider-default-color);
 
   --jh-color-content-primary-enabled: var(--body-text-primary-color);

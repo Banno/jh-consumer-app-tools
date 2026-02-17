@@ -68,7 +68,6 @@ function loadDsThemes(): string {
       // Resolve the path to our bundled jha-wc components using package exports
       const cssPathLight = require.resolve('@jack-henry/jh-tokens/platforms/web/css/jh-theme-light.css');
       const cssPathDark = require.resolve('@jack-henry/jh-tokens/platforms/web/css/jh-theme-dark.css');
-
       if (fs.existsSync(cssPathLight)) {
         cssContent = fs.readFileSync(cssPathLight, 'utf8');
         basePath = path.dirname(cssPathLight);
