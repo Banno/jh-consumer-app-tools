@@ -1,3 +1,13 @@
+## 0.0.7 (2026-02-17)
+
+### 🚀 Features
+
+- **jh-consumer-tools:** adding plugin to fetch only the design system theme ([098704c](https://github.com/Banno/jh-consumer-app-tools/commit/098704c))
+
+### ❤️ Thank You
+
+- Chris Gubbels
+
 ## 0.0.6 (2026-02-17)
 
 ### 🚀 Features
