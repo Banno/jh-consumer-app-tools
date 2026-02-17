@@ -3,8 +3,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import institutionAssetsPlugin from './src/institution-assets-plugin.js';
-import institutionThemePlugin from './src/institution-theme-plugin.js';
-import designSystemThemePlugin from './src/design-system-theme-plugin.js';
+import jhThemePlugin from './src/jh-theme-plugin.js';
 import consumerLayoutPlugin from './src/consumer-layout-plugin.js';
 import consumerAuthPlugin from './src/consumer-auth-plugin.js';
 import type { ConsumerAuthOptions } from './src/consumer-auth-plugin.js';
@@ -13,7 +12,7 @@ import { normalizePath } from 'vite';
 import { fileURLToPath } from 'node:url';
 
 // Export individual plugins
-export { institutionAssetsPlugin, institutionThemePlugin, designSystemThemePlugin, consumerLayoutPlugin, consumerAuthPlugin };
+export { institutionAssetsPlugin, jhThemePlugin, consumerLayoutPlugin, consumerAuthPlugin };
 
 const fontsUrl = await import.meta.resolve?.('../../dist/fonts');
 const fontsPath = normalizePath(fileURLToPath(fontsUrl));
@@ -44,7 +43,7 @@ export default function consumerConfig({
       ],
     }),
     institutionAssetsPlugin({ institutionId, onlineDomain }),
-    institutionThemePlugin({ institutionId, apiBaseUrl: onlineDomain }),
+    jhThemePlugin({ institutionId, apiBaseUrl: onlineDomain }),
     consumerLayoutPlugin({ rootTagName, institutionId, routeConfigPath }),
   ];
 

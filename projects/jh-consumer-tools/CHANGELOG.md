@@ -1,3 +1,23 @@
+## 0.0.7 (2026-02-17)
+
+### 🚀 Features
+
+- **jh-consumer-tools:** adding plugin to fetch only the design system theme ([098704c](https://github.com/Banno/jh-consumer-app-tools/commit/098704c))
+
+### ❤️ Thank You
+
+- Chris Gubbels
+
+## 0.0.6 (2026-02-17)
+
+### 🚀 Features
+
+- **create-consumer-app:** store all vars in .env instead of hardcoding in vite config ([01dad88](https://github.com/Banno/jh-consumer-app-tools/commit/01dad88))
+
+### ❤️ Thank You
+
+- John Robinson
+
 ## 0.0.5 (2026-01-23)
 
 ### 🩹 Fixes

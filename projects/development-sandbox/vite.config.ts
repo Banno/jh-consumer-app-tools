@@ -4,27 +4,24 @@
 
 import * as fs from 'fs';
 import { defineConfig } from 'vite';
-import { institutionAssetsPlugin, institutionThemePlugin, designSystemThemePlugin } from '@jack-henry/consumer-tools/vite-plugins';
+import { institutionAssetsPlugin, jhThemePlugin } from '@jack-henry/consumer-tools/vite-plugins';
 
-const institutionId = process.env.INSTITUTION_ID; //garden bank institutionId
+const institutionId = process.env.INSTITUTION_ID || '4d5abed5-de03-6d15-8506-c143afc8d1e5'; //garden bank institutionId
 const onlineDomain = 'devbank.banno-staging.com';
 
-export default defineConfig(async ({ mode }) => {
+export default defineConfig(({mode}) => {
   const server = {
     port: 8445,
     host: 'localhost',
   };
 
-  console.log(`Using institutionId: ${institutionId || 'none'}, onlineDomain: ${onlineDomain}`);
+  const config = process.env.INSTITUTION_ID ? { institutionId, apiBaseUrl: onlineDomain } : undefined;
 
-  const plugins = institutionId ?
-    [
-      institutionAssetsPlugin({ institutionId, onlineDomain }),
-      institutionThemePlugin({ institutionId, apiBaseUrl: onlineDomain }),
-    ] : [
-      institutionAssetsPlugin({ institutionId: '4d5abed5-de03-6d15-8506-c143afc8d1e5', onlineDomain }), // Get Jack Henry assets if no institutionId is provided
-      designSystemThemePlugin()
-    ];
+  const plugins =
+  [
+    institutionAssetsPlugin({ institutionId, onlineDomain }),
+    jhThemePlugin(config),
+  ];
 
   return {
     server,

@@ -213,8 +213,8 @@ __metadata:
   linkType: hard
 
 "@jack-henry/consumer-tools@npm:*":
-  version: 0.0.5
-  resolution: "@jack-henry/consumer-tools@npm:0.0.5"
+  version: 0.0.7
+  resolution: "@jack-henry/consumer-tools@npm:0.0.7"
   dependencies:
     "@jack-henry/jh-elements": "npm:^2.0.0-beta.8"
     "@jack-henry/jh-icons": "npm:^2.0.0-beta.6"
@@ -231,7 +231,7 @@ __metadata:
     lit: ^3.3.1
     vite: ^7.2.4
     vite-plugin-static-copy: ^3.1.3
-  checksum: 10c0/9c2626a0a4e381430d72dd52992df5d5794ebfc3b73c5e6a4731c440b0a1f5e8abfb1a879c457dbec0f3d21c881a68d13b7b8a68b0efd9035f2f0b7845b6773a
+  checksum: 10c0/701bde51f13bb8946bfb1a1b3413fe8c56b9757fcb31344bc19d16229b74ab5ecbb888c9273d12797681b3173050e1ccd3c8fdfee6c78e84e27b870471874ee2
   languageName: node
   linkType: hard
 

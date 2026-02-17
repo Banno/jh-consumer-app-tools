@@ -52,7 +52,7 @@ yarn add openid-client
 import { defineConfig } from 'vite';
 import {
   institutionAssetsPlugin,
-  institutionThemePlugin,
+  jhThemePlugin,
   consumerLayoutPlugin,
   consumerAuthPlugin,
 } from '@jack-henry/consumer-tools/vite-plugins';
@@ -60,7 +60,7 @@ import {
 export default defineConfig({
   plugins: [
     institutionAssetsPlugin({ institutionId: 'your-institution-id' }),
-    institutionThemePlugin({ institutionId: 'your-institution-id' }),
+    jhThemePlugin({ institutionId: 'your-institution-id' }),
     consumerLayoutPlugin({
       rootTagName: 'your-app',
       institutionId: 'your-institution-id',
@@ -119,6 +119,59 @@ export default defineConfig({
 });
 ```
 
+#### Handling Sensitive Credentials
+
+**Important**: Never commit sensitive credentials like `client_secret` directly in your code. Use environment variables instead:
+
+```typescript
+import { defineConfig, loadEnv } from 'vite';
+import consumerConfig from '@jack-henry/consumer-tools/vite-plugins';
+
+export default defineConfig(async ({ mode }) => {
+  // Load environment variables (use empty string to load all vars, not just VITE_*)
+  const env = loadEnv(mode, process.cwd(), '');
+
+  return {
+    plugins: [
+      ...consumerConfig({
+        rootTagName: 'your-app',
+        institutionId: env.INSTITUTION_ID,
+        auth: {
+          apiBaseUrl: env.API_URL,
+          clientConfig: {
+            client_id: env.CLIENT_ID,
+            client_secret: env.CLIENT_SECRET,
+            grant_types: ['authorization_code'],
+            response_types: ['code'],
+            token_endpoint_auth_method: 'client_secret_post',
+            redirect_uris: JSON.parse(env.REDIRECT_URIS),
+          },
+        },
+      }),
+    ],
+  };
+});
+```
+
+Create a `.env` file in your project root:
+
+```
+INSTITUTION_ID=your-institution-id
+CLIENT_ID=your-client-id
+CLIENT_SECRET=your-client-secret
+API_URL=https://your-api-base-url.com
+REDIRECT_URIS=["https://localhost:8445/auth/cb"]
+```
+
+**Note**: These variables do not use the `VITE_` prefix because they are only used in the Vite configuration and are never exposed to client code. Variables with the `VITE_` prefix are embedded into your client bundle and should not contain sensitive information.
+
+Make sure to add `.env` to your `.gitignore`:
+
+```
+.env
+.env.local
+```
+
 ### Using Web Components
 
 ```typescript
@@ -129,6 +182,186 @@ import '@jack-henry/consumer-tools/components/jh-consumer-layout';
   <!-- Your app content -->
 </jh-consumer-layout>
 ```
+
+## Contexts Provided by jh-consumer-layout
+
+The `jh-consumer-layout` component provides three contexts using Lit's context API that child components can consume to access shared application state.
+
+### User Context
+
+Access the current user's authentication state and information.
+
+**Import:**
+```typescript
+import { consume } from '@lit/context';
+import { userContext, type UserContext } from '@jack-henry/consumer-tools/contexts/user';
+```
+
+**Usage in a Lit component:**
+```typescript
+@consume({ context: userContext, subscribe: true })
+@property({ attribute: false })
+user: UserContext;
+```
+
+**Interface:**
+```typescript
+interface UserContext {
+  user: User | null;  // User object with profile information
+  state: 'unauthenticated' | 'authenticated' | 'loading' | 'checking';
+}
+
+interface User {
+  sub: string;                // User ID (subject)
+  given_name: string;         // First name
+  family_name: string;        // Last name
+  name: string;               // Full name
+  email: string;              // Email address
+  nickname: string;           // Username/nickname
+  picture: string;            // Profile picture URL
+  preferred_username: string; // Preferred display name
+  // ... additional OAuth user claims
+}
+```
+
+**States:**
+- `unauthenticated` - User is not logged in
+- `loading` - Initial authentication check in progress
+- `checking` - Re-validating authentication status
+- `authenticated` - User is logged in and validated
+
+### Institution Context
+
+Access the current financial institution's configuration and branding.
+
+**Import:**
+```typescript
+import { consume } from '@lit/context';
+import { institutionContext, type InstitutionContext } from '@jack-henry/consumer-tools/contexts/institution';
+```
+
+**Usage in a Lit component:**
+```typescript
+@consume({ context: institutionContext, subscribe: true })
+@property({ attribute: false })
+institution: InstitutionContext;
+```
+
+**Interface:**
+```typescript
+interface InstitutionContext {
+  institution: Institution | null;  // Institution configuration
+  state: 'initial' | 'loading' | 'ready' | 'error';
+}
+
+interface Institution {
+  // Branding
+  name: string;
+  logo: string;
+  images: {
+    logoUrl: string;
+    faviconUrl: string;
+    // ... additional branding images
+  };
+
+  // Features and abilities
+  abilities: {
+    billPay: boolean;
+    mobileDeposit: boolean;
+    cardControls: boolean;
+    // ... many more feature flags
+  };
+
+  // Links and resources
+  links: InstitutionLink[];
+
+  // ... extensive configuration options
+}
+```
+
+**States:**
+- `initial` - Not yet loaded
+- `loading` - Fetching institution data
+- `ready` - Institution data loaded successfully
+- `error` - Failed to load institution data
+
+### Router Context
+
+Access the router instance and route configuration.
+
+**Import:**
+```typescript
+import { consume } from '@lit/context';
+import { routerContext, type RouterContext } from '@jack-henry/consumer-tools/contexts/router';
+```
+
+**Usage in a Lit component:**
+```typescript
+@consume({ context: routerContext, subscribe: true })
+@property({ attribute: false })
+routerContext: RouterContext;
+```
+
+**Interface:**
+```typescript
+interface RouterContext {
+  router: Router | null;      // Router instance for programmatic navigation
+  config: RouteConfig | null; // Your application's route configuration
+}
+```
+
+**Usage example:**
+```typescript
+// Navigate programmatically
+this.routerContext.router.go('/dashboard');
+
+// Access route configuration
+const routes = this.routerContext.config;
+```
+
+### Complete Component Example
+
+Here's a complete example of a component consuming all three contexts:
+
+```typescript
+import { LitElement, html } from 'lit';
+import { customElement, property } from 'lit/decorators.js';
+import { consume } from '@lit/context';
+import { userContext, type UserContext } from '@jack-henry/consumer-tools/contexts/user';
+import { institutionContext, type InstitutionContext } from '@jack-henry/consumer-tools/contexts/institution';
+import { routerContext, type RouterContext } from '@jack-henry/consumer-tools/contexts/router';
+
+@customElement('my-dashboard')
+export class MyDashboard extends LitElement {
+  @consume({ context: userContext, subscribe: true })
+  @property({ attribute: false })
+  user: UserContext;
+
+  @consume({ context: institutionContext, subscribe: true })
+  @property({ attribute: false })
+  institution: InstitutionContext;
+
+  @consume({ context: routerContext, subscribe: true })
+  @property({ attribute: false })
+  routerContext: RouterContext;
+
+  render() {
+    if (this.user.state !== 'authenticated') {
+      return html`<p>Please log in</p>`;
+    }
+
+    return html`
+      <h1>Welcome, ${this.user.user.given_name}!</h1>
+      <p>Banking with ${this.institution.institution?.name}</p>
+      <button @click=${() => this.routerContext.router.go('/settings')}>
+        Go to Settings
+      </button>
+    `;
+  }
+}
+```
+
+> **Note:** `router.go` is used as an example of programmatic navigation, but that is only here for demonstration purposes. In most cases you should use `<a href="/settings">` for navigation to ensure proper accessibility, bookmarking, and expected web behavior.
 
 ## Consumer Auth Plugin Details
 
