@@ -7,21 +7,32 @@ import { defineConfig, loadEnv } from 'vite';
 import consumerPlugins from '@jack-henry/consumer-tools/vite-plugins';
 import { checkCerts } from './bin/ssl/check-certs.js';
 
-const apiBaseUrl = 'https://devbank.banno-staging.com';
-
 export default defineConfig(async ({ mode }) => {
   // load .env file
-  const env = await loadEnv(mode, process.cwd());
-  if (mode === 'development' && !env.VITE_CLIENT_SECRET) {
-    throw new Error('VITE_CLIENT_SECRET is not defined in .env file');
+  const env = await loadEnv(mode, process.cwd(), '');
+
+  // Validate required environment variables
+  const requiredEnvVars = ['INSTITUTION_ID', 'CLIENT_ID', 'CLIENT_SECRET', 'API_URL', 'REDIRECT_URIS'];
+
+  for (const varName of requiredEnvVars) {
+    if (!env[varName]) {
+      throw new Error(`${varName} is not defined in .env file`);
+    }
   }
+
+  const apiBaseUrl = env.API_URL;
+  const redirectUris = JSON.parse(env.REDIRECT_URIS);
+
+  // Extract domain from API URL for onlineDomain (remove https:// prefix)
+  const onlineDomain = apiBaseUrl.replace(/^https?:\/\//, '');
+
   const clientConfig = {
-    client_id: '6a9f0a25-fa68-4b03-9000-fdc47388521e', // "Conversations dev" client
-    client_secret: env.VITE_CLIENT_SECRET,
+    client_id: env.CLIENT_ID,
+    client_secret: env.CLIENT_SECRET,
     grant_types: ['authorization_code'],
     response_types: ['code'],
     token_endpoint_auth_method: 'client_secret_post' as const,
-    redirect_uris: ['https://localhost:8445/auth/cb'],
+    redirect_uris: redirectUris,
   };
 
   await checkCerts('./certs');
@@ -42,8 +53,8 @@ export default defineConfig(async ({ mode }) => {
     plugins: [
       consumerPlugins({
         rootTagName: 'example-consumer-app',
-        institutionId: '5db40b7a-ee76-42b3-acb9-eb7045011c2a', //dev bank institutionId
-        onlineDomain: 'devbank.banno-staging.com',
+        institutionId: env.INSTITUTION_ID,
+        onlineDomain,
         auth: {
           apiBaseUrl,
           clientConfig,
