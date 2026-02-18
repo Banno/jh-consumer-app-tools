@@ -24,7 +24,7 @@
     "@jack-henry/web-component-router": "3.12.2",
     "@lit/context": "^1.1.6",
     "lit": "^3.3.1",
-    "vite": "^7.1.9",
+    "vite": "^7.3.1",
     "vite-plugin-static-copy": "^3.1.3"
   }
 }
