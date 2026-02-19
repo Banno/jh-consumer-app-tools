@@ -272,21 +272,80 @@ describe('consumerAuthPlugin', () => {
   });
 
   describe('authScope configuration', () => {
-    it('should use default authScope when not provided', () => {
+    it('should use only default authScope when not provided (undefined)', async () => {
       const plugin = consumerAuthPlugin(mockOptions);
-      expect(plugin).toBeDefined();
-      // Default scope should be used internally
+      const mockServer: any = {
+        middlewares: {
+          use: vi.fn(),
+        },
+      };
+
+      if (typeof plugin.configureServer === 'function') {
+        await plugin.configureServer.call(plugin, mockServer);
+
+        // Verify buildAuthorizationUrl was called with only the default scope
+        expect(vi.mocked(client.buildAuthorizationUrl)).toHaveBeenCalledWith(
+          expect.anything(),
+          expect.objectContaining({
+            scope:
+              'openid profile email https://api.banno.com/consumer/auth/offline_access https://api.banno.com/consumer/auth/user.profile.readonly',
+          }),
+        );
+      }
     });
 
-    it('should combine custom authScope with default scope', () => {
+    it('should concatenate custom authScope with default scope when provided', async () => {
       const optionsWithCustomScope: ConsumerAuthOptions = {
         ...mockOptions,
         authScope: 'custom-scope additional-scope',
       };
 
       const plugin = consumerAuthPlugin(optionsWithCustomScope);
-      expect(plugin).toBeDefined();
-      // Custom + default scopes should be used internally
+      const mockServer: any = {
+        middlewares: {
+          use: vi.fn(),
+        },
+      };
+
+      if (typeof plugin.configureServer === 'function') {
+        await plugin.configureServer.call(plugin, mockServer);
+
+        // Verify buildAuthorizationUrl was called with concatenated scopes
+        expect(vi.mocked(client.buildAuthorizationUrl)).toHaveBeenCalledWith(
+          expect.anything(),
+          expect.objectContaining({
+            scope:
+              'openid profile email https://api.banno.com/consumer/auth/offline_access https://api.banno.com/consumer/auth/user.profile.readonly custom-scope additional-scope',
+          }),
+        );
+      }
+    });
+
+    it('should use only default scope when authScope is empty string', async () => {
+      const optionsWithEmptyScope: ConsumerAuthOptions = {
+        ...mockOptions,
+        authScope: '',
+      };
+
+      const plugin = consumerAuthPlugin(optionsWithEmptyScope);
+      const mockServer: any = {
+        middlewares: {
+          use: vi.fn(),
+        },
+      };
+
+      if (typeof plugin.configureServer === 'function') {
+        await plugin.configureServer.call(plugin, mockServer);
+
+        // Empty string is falsy, so only default scope is used
+        expect(vi.mocked(client.buildAuthorizationUrl)).toHaveBeenCalledWith(
+          expect.anything(),
+          expect.objectContaining({
+            scope:
+              'openid profile email https://api.banno.com/consumer/auth/offline_access https://api.banno.com/consumer/auth/user.profile.readonly',
+          }),
+        );
+      }
     });
   });
 
@@ -346,15 +405,6 @@ describe('consumerAuthPlugin', () => {
       };
 
       expect(() => consumerAuthPlugin(minimalOptions)).not.toThrow();
-    });
-
-    it('should handle empty string in authScope', () => {
-      const optionsWithEmptyScope: ConsumerAuthOptions = {
-        ...mockOptions,
-        authScope: '',
-      };
-
-      expect(() => consumerAuthPlugin(optionsWithEmptyScope)).not.toThrow();
     });
 
     it('should handle apiBaseUrl with trailing slash', () => {
