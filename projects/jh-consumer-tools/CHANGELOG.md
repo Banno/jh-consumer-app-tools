@@ -1,3 +1,13 @@
+## 0.0.8 (2026-02-18)
+
+### 🚀 Features
+
+- **example-development-sandbox:** building example without authentication ([fc3de89](https://github.com/Banno/jh-consumer-app-tools/commit/fc3de89))
+
+### ❤️ Thank You
+
+- Chris Gubbels
+
 ## 0.0.7 (2026-02-17)
 
 ### 🚀 Features
