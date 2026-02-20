@@ -272,28 +272,6 @@ describe('consumerAuthPlugin', () => {
   });
 
   describe('authScope configuration', () => {
-    it('should use only default authScope when not provided (undefined)', async () => {
-      const plugin = consumerAuthPlugin(mockOptions);
-      const mockServer: any = {
-        middlewares: {
-          use: vi.fn(),
-        },
-      };
-
-      if (typeof plugin.configureServer === 'function') {
-        await plugin.configureServer.call(plugin, mockServer);
-
-        // Verify buildAuthorizationUrl was called with only the default scope
-        expect(vi.mocked(client.buildAuthorizationUrl)).toHaveBeenCalledWith(
-          expect.anything(),
-          expect.objectContaining({
-            scope:
-              'openid profile email https://api.banno.com/consumer/auth/offline_access https://api.banno.com/consumer/auth/user.profile.readonly',
-          }),
-        );
-      }
-    });
-
     it('should concatenate custom authScope with default scope when provided', async () => {
       const optionsWithCustomScope: ConsumerAuthOptions = {
         ...mockOptions,
@@ -321,23 +299,40 @@ describe('consumerAuthPlugin', () => {
       }
     });
 
-    it('should use only default scope when authScope is empty string', async () => {
-      const optionsWithEmptyScope: ConsumerAuthOptions = {
-        ...mockOptions,
-        authScope: '',
-      };
-
-      const plugin = consumerAuthPlugin(optionsWithEmptyScope);
-      const mockServer: any = {
+    it('should use only default authScope when not provided or empty', async () => {
+      // Test with undefined (not provided)
+      const pluginUndefined = consumerAuthPlugin(mockOptions);
+      const mockServerUndefined: any = {
         middlewares: {
           use: vi.fn(),
         },
       };
 
-      if (typeof plugin.configureServer === 'function') {
-        await plugin.configureServer.call(plugin, mockServer);
+      if (typeof pluginUndefined.configureServer === 'function') {
+        await pluginUndefined.configureServer.call(pluginUndefined, mockServerUndefined);
 
-        // Empty string is falsy, so only default scope is used
+        expect(vi.mocked(client.buildAuthorizationUrl)).toHaveBeenCalledWith(
+          expect.anything(),
+          expect.objectContaining({
+            scope:
+              'openid profile email https://api.banno.com/consumer/auth/offline_access https://api.banno.com/consumer/auth/user.profile.readonly',
+          }),
+        );
+      }
+
+      vi.clearAllMocks();
+
+      // Test with empty string
+      const pluginEmpty = consumerAuthPlugin({ ...mockOptions, authScope: '' });
+      const mockServerEmpty: any = {
+        middlewares: {
+          use: vi.fn(),
+        },
+      };
+
+      if (typeof pluginEmpty.configureServer === 'function') {
+        await pluginEmpty.configureServer.call(pluginEmpty, mockServerEmpty);
+
         expect(vi.mocked(client.buildAuthorizationUrl)).toHaveBeenCalledWith(
           expect.anything(),
           expect.objectContaining({
