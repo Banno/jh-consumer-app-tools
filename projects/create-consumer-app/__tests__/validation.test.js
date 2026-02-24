@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import {
+  Messages,
   validateProjectName,
   validateUUID,
   validateApiUrl,
@@ -25,31 +26,31 @@ describe('validateProjectName', () => {
   });
 
   it('rejects empty string', () => {
-    expect(validateProjectName('')).toBe('Please enter a project name.');
+    expect(validateProjectName('')).toBe(Messages.PROJECT_NAME_REQUIRED);
   });
 
   it('rejects undefined', () => {
-    expect(validateProjectName(undefined)).toBe('Please enter a project name.');
+    expect(validateProjectName(undefined)).toBe(Messages.PROJECT_NAME_REQUIRED);
   });
 
   it('rejects names starting with a hyphen', () => {
-    expect(validateProjectName('-my-app')).toContain('Name can only');
+    expect(validateProjectName('-my-app')).toBe(Messages.PROJECT_NAME_INVALID);
   });
 
   it('rejects names ending with a hyphen', () => {
-    expect(validateProjectName('my-app-')).toContain('Name can only');
+    expect(validateProjectName('my-app-')).toBe(Messages.PROJECT_NAME_INVALID);
   });
 
   it('rejects names with consecutive hyphens', () => {
-    expect(validateProjectName('my--app')).toContain('Name can only');
+    expect(validateProjectName('my--app')).toBe(Messages.PROJECT_NAME_INVALID);
   });
 
   it('rejects names with special characters', () => {
-    expect(validateProjectName('my_app!')).toContain('Name can only');
+    expect(validateProjectName('my_app!')).toBe(Messages.PROJECT_NAME_INVALID);
   });
 
   it('rejects names starting with a space', () => {
-    expect(validateProjectName(' my-app')).toContain('Name can only');
+    expect(validateProjectName(' my-app')).toBe(Messages.PROJECT_NAME_INVALID);
   });
 });
 
@@ -63,23 +64,23 @@ describe('validateUUID', () => {
   });
 
   it('rejects empty string', () => {
-    expect(validateUUID('')).toContain('valid institution ID');
+    expect(validateUUID('')).toBe(Messages.UUID_INVALID);
   });
 
   it('rejects undefined', () => {
-    expect(validateUUID(undefined)).toContain('valid institution ID');
+    expect(validateUUID(undefined)).toBe(Messages.UUID_INVALID);
   });
 
   it('rejects a UUID with uppercase letters', () => {
-    expect(validateUUID('12345678-1234-1234-1234-123456789ABC')).toContain('valid institution ID');
+    expect(validateUUID('12345678-1234-1234-1234-123456789ABC')).toBe(Messages.UUID_INVALID);
   });
 
   it('rejects a malformed UUID', () => {
-    expect(validateUUID('not-a-uuid')).toContain('valid institution ID');
+    expect(validateUUID('not-a-uuid')).toBe(Messages.UUID_INVALID);
   });
 
   it('rejects a UUID missing a segment', () => {
-    expect(validateUUID('12345678-1234-1234-123456789abc')).toContain('valid institution ID');
+    expect(validateUUID('12345678-1234-1234-123456789abc')).toBe(Messages.UUID_INVALID);
   });
 });
 
@@ -89,19 +90,19 @@ describe('validateApiUrl', () => {
   });
 
   it('rejects empty string', () => {
-    expect(validateApiUrl('')).toBe('Please enter a complete API base URL.');
+    expect(validateApiUrl('')).toBe(Messages.API_URL_INVALID);
   });
 
   it('rejects the bare default "https://"', () => {
-    expect(validateApiUrl('https://')).toBe('Please enter a complete API base URL.');
+    expect(validateApiUrl('https://')).toBe(Messages.API_URL_INVALID);
   });
 
   it('rejects http:// URLs', () => {
-    expect(validateApiUrl('http://api.example.com')).toBe('The API base URL must start with https://.');
+    expect(validateApiUrl('http://api.example.com')).toBe(Messages.API_URL_INVALID);
   });
 
   it('rejects URLs without a protocol', () => {
-    expect(validateApiUrl('api.example.com')).toBe('The API base URL must start with https://.');
+    expect(validateApiUrl('api.example.com')).toBe(Messages.API_URL_INVALID);
   });
 });
 
@@ -112,19 +113,19 @@ describe('validateRedirectUri', () => {
     });
 
     it('rejects empty string', () => {
-      expect(validateRedirectUri('', { required: true })).toContain('required');
+      expect(validateRedirectUri('', { required: true })).toBe(Messages.REDIRECT_URI_INVALID);
     });
 
     it('rejects the bare default', () => {
-      expect(validateRedirectUri('https://', { required: true })).toContain('required');
+      expect(validateRedirectUri('https://', { required: true })).toBe(Messages.REDIRECT_URI_INVALID);
     });
 
     it('rejects http:// URLs', () => {
-      expect(validateRedirectUri('http://localhost', { required: true })).toContain('https://');
+      expect(validateRedirectUri('http://localhost', { required: true })).toBe(Messages.REDIRECT_URI_INVALID);
     });
 
     it('rejects plain text', () => {
-      expect(validateRedirectUri('not-a-url', { required: true })).toContain('https://');
+      expect(validateRedirectUri('not-a-url', { required: true })).toBe(Messages.REDIRECT_URI_INVALID);
     });
   });
 
@@ -133,20 +134,16 @@ describe('validateRedirectUri', () => {
       expect(validateRedirectUri('')).toBe(true);
     });
 
-    it('accepts the bare default (exit signal)', () => {
-      expect(validateRedirectUri('https://')).toBe(true);
-    });
-
     it('accepts a valid https URL', () => {
       expect(validateRedirectUri('https://example.com/cb')).toBe(true);
     });
 
-    it('accepts an http URL', () => {
-      expect(validateRedirectUri('http://localhost:3000')).toBe(true);
+    it('rejects an http URL', () => {
+      expect(validateRedirectUri('http://localhost:3000')).toBe(Messages.REDIRECT_URI_INVALID);
     });
 
     it('rejects a non-URL string', () => {
-      expect(validateRedirectUri('not-a-url')).toContain('valid URL');
+      expect(validateRedirectUri('not-a-url')).toBe(Messages.REDIRECT_URI_INVALID);
     });
   });
 });
@@ -157,10 +154,10 @@ describe('validateClientId', () => {
   });
 
   it('rejects empty string', () => {
-    expect(validateClientId('')).toContain('client ID');
+    expect(validateClientId('')).toBe(Messages.CLIENT_ID_REQUIRED);
   });
 
   it('rejects undefined', () => {
-    expect(validateClientId(undefined)).toContain('client ID');
+    expect(validateClientId(undefined)).toBe(Messages.CLIENT_ID_REQUIRED);
   });
 });

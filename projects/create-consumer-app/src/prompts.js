@@ -36,7 +36,7 @@ export async function gatherUserInput() {
   }
 
   let projectName = process.argv[2];
-  if (!projectName) {
+  if (!projectName || validateProjectName(projectName) !== true) {
     projectName = await input({
       message: 'What is the name of your project? (e.g., my-financial-planner)',
       validate: validateProjectName,
