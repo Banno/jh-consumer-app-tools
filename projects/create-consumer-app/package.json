@@ -6,7 +6,10 @@
   "bin": "./bin/cli.js",
   "main": "src/index.js",
   "scripts": {
-    "start": "node ./src/index.js"
+    "start": "node ./src/index.js",
+    "test": "vitest --run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest --coverage"
   },
   "files": [
     "bin",
@@ -22,6 +25,10 @@
     "@inquirer/prompts": "7.10.1",
     "chalk": "5.6.2",
     "fs-extra": "11.3.2"
+  },
+  "devDependencies": {
+    "@vitest/coverage-v8": "^3.0.4",
+    "vitest": "^3.0.4"
   },
   "repository": {
     "type": "git",

@@ -3,3 +3,13 @@
 # SPDX-License-Identifier: Apache-2.0
 
 certs
+
+# Dependencies
+node_modules/
+
+# Test artifacts
+coverage/
+
+# IDE
+.vscode/
+.idea/
