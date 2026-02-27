@@ -58,6 +58,8 @@ export default defineConfig(async ({ mode }) => {
         auth: {
           apiBaseUrl,
           clientConfig,
+          // example providing additional scopes
+          // authScope: 'https://api.banno.com/consumer/auth/accounts.readonly',
         },
         routeConfigPath: './src/routing/route-config.ts',
       }),
