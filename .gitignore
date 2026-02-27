@@ -2,7 +2,10 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
+# OS
 .DS_Store
+Thumbs.db
+
 node_modules
 coverage
 *.d.ts
