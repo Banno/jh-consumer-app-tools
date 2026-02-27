@@ -1,3 +1,13 @@
+## 0.0.9 (2026-02-27)
+
+### 🩹 Fixes
+
+- **jh-consumer-tools:** properly handle provided authScope ([fb2c238](https://github.com/Banno/jh-consumer-app-tools/commit/fb2c238))
+
+### ❤️ Thank You
+
+- John Robinson
+
 ## 0.0.8 (2026-02-18)
 
 ### 🚀 Features

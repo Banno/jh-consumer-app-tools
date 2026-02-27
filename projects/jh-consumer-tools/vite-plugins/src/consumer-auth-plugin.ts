@@ -28,12 +28,10 @@ const defaultAuthScope =
   'openid profile email https://api.banno.com/consumer/auth/offline_access https://api.banno.com/consumer/auth/user.profile.readonly';
 
 export default function consumerAuthPlugin(options: ConsumerAuthOptions): Plugin {
-  const {
-    apiBaseUrl,
-    clientConfig,
-    authScope = options.authScope ? `${options.authScope} ${defaultAuthScope}` : defaultAuthScope,
-    apiHeadersToCopy = ['x-request-id'],
-  } = options;
+  const { apiBaseUrl, clientConfig, authScope, apiHeadersToCopy = ['x-request-id'] } = options;
+
+  // concat incoming authScope with defaultAuthScope.
+  const fullAuthScope = authScope ? `${defaultAuthScope} ${authScope}` : defaultAuthScope;
 
   let config: client.Configuration;
   let code_verifier: string;
@@ -112,7 +110,7 @@ export default function consumerAuthPlugin(options: ConsumerAuthOptions): Plugin
 
       authorizationUrl = client.buildAuthorizationUrl(config, {
         redirect_uri,
-        scope: authScope,
+        scope: fullAuthScope,
         code_challenge,
         code_challenge_method: 'S256',
         claims: JSON.stringify({
