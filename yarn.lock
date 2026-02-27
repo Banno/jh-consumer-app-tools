@@ -1257,12 +1257,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@commitlint/config-workspace-scopes@npm:^20.2.0":
-  version: 20.2.0
-  resolution: "@commitlint/config-workspace-scopes@npm:20.2.0"
+"@commitlint/config-workspace-scopes@npm:^20.4.0":
+  version: 20.4.0
+  resolution: "@commitlint/config-workspace-scopes@npm:20.4.0"
   dependencies:
     glob: "npm:^11.0.0"
-  checksum: 10c0/045fbb8e5496d4740d38ed89c29fe6a72b918fe78cd01d66f2bbc6ec9936be121f77c37fa26102a20960b7b10f916d815fade3fa413ee69e7b9c448c0b6e6342
+  checksum: 10c0/f2f295c6f97e98630aed648a5a2c8407d292c80188dbdffb80f9b3c7cf756926a881bef77dc020b585201fe791dd7ce8a46519ebc3aa0c15336fe1e4bb8903db
   languageName: node
   linkType: hard
 
@@ -2308,7 +2308,7 @@ __metadata:
   dependencies:
     "@commitlint/cli": "npm:^20.3.1"
     "@commitlint/config-conventional": "npm:^20.4.1"
-    "@commitlint/config-workspace-scopes": "npm:^20.2.0"
+    "@commitlint/config-workspace-scopes": "npm:^20.4.0"
     "@nx/js": "npm:^22.4.0"
     eslint: "npm:^9.23.0"
     husky: "npm:^8.0.3"
