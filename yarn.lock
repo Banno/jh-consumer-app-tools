@@ -2245,7 +2245,7 @@ __metadata:
     playwright: "npm:^1.57.0"
     typescript: "npm:^5.9.3"
     vite: "npm:^7.3.1"
-    vite-plugin-static-copy: "npm:3.1.4"
+    vite-plugin-static-copy: "npm:3.2.0"
     vitest: "npm:^4.0.18"
   peerDependencies:
     "@jack-henry/jh-elements": ^2.0.0-beta.8
@@ -2283,7 +2283,7 @@ __metadata:
     "@lit/context": "npm:^1.1.6"
     lit: "npm:^3.3.1"
     vite: "npm:^7.3.1"
-    vite-plugin-static-copy: "npm:^3.1.3"
+    vite-plugin-static-copy: "npm:^3.2.0"
   languageName: unknown
   linkType: soft
 
@@ -2298,7 +2298,7 @@ __metadata:
     "@lit/context": "npm:^1.1.6"
     lit: "npm:^3.3.1"
     vite: "npm:^7.3.1"
-    vite-plugin-static-copy: "npm:^3.1.3"
+    vite-plugin-static-copy: "npm:^3.2.0"
   languageName: unknown
   linkType: soft
 
@@ -6034,7 +6034,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"p-map@npm:^7.0.2, p-map@npm:^7.0.3":
+"p-map@npm:^7.0.2":
   version: 7.0.3
   resolution: "p-map@npm:7.0.3"
   checksum: 10c0/46091610da2b38ce47bcd1d8b4835a6fa4e832848a6682cf1652bc93915770f4617afc844c10a77d1b3e56d2472bb2d5622353fa3ead01a7f42b04fc8e744a5c
@@ -7080,21 +7080,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vite-plugin-static-copy@npm:3.1.4":
-  version: 3.1.4
-  resolution: "vite-plugin-static-copy@npm:3.1.4"
-  dependencies:
-    chokidar: "npm:^3.6.0"
-    p-map: "npm:^7.0.3"
-    picocolors: "npm:^1.1.1"
-    tinyglobby: "npm:^0.2.15"
-  peerDependencies:
-    vite: ^5.0.0 || ^6.0.0 || ^7.0.0
-  checksum: 10c0/e733eb123db9ebefbd9c6e5a589f2bfdf71c047ce87190f45575806d893cf19547043ed4a95f30df49d2ac57cb1ba59b3692c559e91181c2321ba363da6c27d3
-  languageName: node
-  linkType: hard
-
-"vite-plugin-static-copy@npm:^3.1.3":
+"vite-plugin-static-copy@npm:3.2.0, vite-plugin-static-copy@npm:^3.2.0":
   version: 3.2.0
   resolution: "vite-plugin-static-copy@npm:3.2.0"
   dependencies:
