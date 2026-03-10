@@ -37,7 +37,7 @@ If you don't specify a project name, the CLI will prompt you for one.
 
 ## Configuration
 
-The `vite.config.ts` file is automatically configured with the credentials you provide during the interactive setup.
+During setup, the CLI creates a `.env` file in your project with the credentials you provide (institution ID, client ID, client secret, API URL, and redirect URIs). The `vite.config.ts` reads these variables at dev-server startup.
 
 ## Generated Project Structure
 

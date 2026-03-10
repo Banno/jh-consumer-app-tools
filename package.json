@@ -13,7 +13,7 @@
     "nx:release:dry": "HUSKY=0 nx release --dry-run --verbose",
     "typecheck": "nx run-many --target=typecheck",
     "build": "nx run-many --target=build --exclude=example-consumer-app,example-development-sandbox",
-    "test": "nx run-many --target=test --parallel",
+    "test": "CI=1 nx run-many --target=test --parallel",
     "prepare": "husky install",
     "postinstall": "npm run build",
     "format": "prettier --write ."

@@ -2,7 +2,6 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { confirm, input, password, select } from '@inquirer/prompts';
 import { ExitPromptError } from '@inquirer/core';
 import fs from 'fs-extra';
 import path from 'path';
@@ -10,297 +9,86 @@ import { fileURLToPath } from 'url';
 import chalk from 'chalk';
 import { exec } from 'child_process';
 
+import { toKebabCase, toPascalCase } from './naming.js';
+import { gatherUserInput } from './prompts.js';
+import { copyProjectTemplate, transformProjectFiles, renameProjectFiles } from './file-operations.js';
+import { updatePackageJson, createEnvFile, ensureGitignore } from './config.js';
+import {
+  formatPackageManagerField,
+  getInstallCommand,
+  getVersionCommand,
+  generateYarnRcYml,
+} from './package-manager.js';
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const exampleAppDir = path.resolve(__dirname, '..', 'example-consumer-app');
 
-const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
-
 async function run() {
   try {
-    const readyToProceed = await confirm({
-      message:
-        'Welcome! To create a new consumer app, you will need the following:\n  - Institution ID\n  - Client ID\n  - Client Secret\n  - API Base URL (your Banno Online domain)\n\nIf you do not have these, please contact your implementation provider.\n\nAre you ready to proceed?',
-      default: true,
-    });
+    // 1. Gather user input
+    const userInput = await gatherUserInput();
 
-    if (!readyToProceed) {
+    if (!userInput) {
       console.log(chalk.yellow('Exiting setup. Please gather the required information and run the tool again.'));
       process.exit(0);
     }
 
-    let projectName = process.argv[2];
-    if (!projectName) {
-      projectName = await input({
-        message: 'What is the name of your project? (e.g., my-financial-planner)',
-        validate: (value) => {
-          if (!value) {
-            return 'Please enter a project name.';
-          }
-          const validNameRegex = /^[a-zA-Z0-9]+(?:[\s-][a-zA-Z0-9]+)*$/;
-          if (!validNameRegex.test(value)) {
-            return 'Name can only contain letters, numbers, spaces, and hyphens, and cannot start, end, or have multiple spaces/hyphens.';
-          }
-          return true;
-        },
-      });
-    }
+    const { projectName, institutionId, clientId, clientSecret, apiBaseUrl, redirectUris, packageManagerChoice } =
+      userInput;
 
-    const institutionId = await input({
-      message: 'What is your institution ID?',
-      validate: (value) => {
-        if (!value || !UUID_REGEX.test(value)) {
-          return 'Please enter a valid institution ID (UUID).';
-        }
-        return true;
-      },
-    });
+    // 2. Derive names
+    const kebabName = toKebabCase(projectName);
+    const pascalName = toPascalCase(kebabName);
+    const projectDir = path.resolve(process.cwd(), kebabName);
 
-    const clientId = await input({
-      message: 'What is your client ID?',
-      validate: (value) => {
-        if (!value) {
-          return 'Please enter a client ID.';
-        }
-        return true;
-      },
-    });
-
-    const clientSecret = await password({
-      message: 'What is your client secret?',
-    });
-
-    const apiBaseUrl = await input({
-      message: 'What is the API base URL?',
-      default: 'https://',
-      validate: (value) => {
-        if (!value || value === 'https://') {
-          return 'Please enter a complete API base URL.';
-        }
-        if (!value.startsWith('https://')) {
-          return 'The API base URL must start with https://.';
-        }
-        return true;
-      },
-    });
-
-    const kebabCaseProjectName = projectName.replace(/\s+/g, '-').toLowerCase();
-
-    const redirectUris = [];
-    const firstRedirectUri = await input({
-      message: 'Enter your primary redirect URI (at least one is required):',
-      default: 'https://localhost:8445/auth/cb',
-      validate: (value) => {
-        if (!value || value === 'https://') {
-          return 'A complete redirect URI is required.';
-        }
-        if (!value.startsWith('https')) {
-          return 'Please enter a valid URL starting with https://.';
-        }
-        return true;
-      },
-    });
-    redirectUris.push(firstRedirectUri);
-
-    let askForMore = true;
-    while (askForMore) {
-      const additionalRedirectUri = await input({
-        message: 'Enter an additional redirect URI (optional, leave blank to finish):',
-        default: 'https://',
-        validate: (value) => {
-          // Allow empty string or just the default to exit
-          if (value === '' || value === 'https://') {
-            return true;
-          }
-          // If they entered something, it must be a valid URL
-          if (!value.startsWith('http')) {
-            return 'Please enter a valid URL starting with http:// or https://.';
-          }
-          return true;
-        },
-      });
-      if (additionalRedirectUri && additionalRedirectUri !== 'https://') {
-        redirectUris.push(additionalRedirectUri);
-      } else {
-        askForMore = false;
-      }
-    }
-
-    const packageManagerChoice = await select({
-      message: 'Which package manager would you like to use?',
-      choices: [
-        { name: 'npm', value: 'npm' },
-        { name: 'yarn (v1)', value: 'yarn (v1)' },
-        { name: 'yarn (v4)', value: 'yarn (v4)' },
-      ],
-      default: 'npm',
-    });
-
-    const projectDir = path.resolve(process.cwd(), kebabCaseProjectName);
-
+    // 3. Check for conflicts
     if (fs.existsSync(projectDir)) {
-      console.error(chalk.red(`Directory ${kebabCaseProjectName} already exists.`));
+      console.error(chalk.red(`Directory ${kebabName} already exists.`));
       process.exit(1);
     }
 
     console.log(chalk.blue(`Creating a new consumer app in ${projectDir}`));
 
-    await fs.copy(exampleAppDir, projectDir, {
-      filter: (src) => {
-        const relativePath = path.relative(exampleAppDir, src);
-        const excludedDirs = ['dist', 'certs', 'node_modules', 'src/assets'];
-        const excludedFiles = ['.env'];
-        return (
-          !excludedDirs.some((dir) => relativePath.startsWith(dir)) &&
-          !excludedFiles.some((file) => relativePath === file)
-        );
-      },
-    });
+    // 4. Copy template
+    await copyProjectTemplate(exampleAppDir, projectDir);
 
-    const pascalCaseProjectName = kebabCaseProjectName
-      .split('-')
-      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-      .join('');
+    // 5. Transform file contents & collect files to rename
+    const filesToRename = await transformProjectFiles(projectDir, kebabName, pascalName);
 
-    const filesToRename = [];
-    const dirsToScan = [projectDir];
+    // 6. Rename files
+    await renameProjectFiles(filesToRename, kebabName);
 
-    while (dirsToScan.length > 0) {
-      const currentDir = dirsToScan.pop();
-      const items = await fs.readdir(currentDir);
-
-      for (const item of items) {
-        const itemPath = path.join(currentDir, item);
-        const stat = await fs.stat(itemPath);
-
-        if (stat.isDirectory()) {
-          dirsToScan.push(itemPath);
-        } else {
-          // Replace content
-          let content = await fs.readFile(itemPath, 'utf8');
-          let modified = false;
-          if (content.includes('example-consumer-app')) {
-            content = content.replace(/example-consumer-app/g, kebabCaseProjectName);
-            modified = true;
-          }
-          if (content.includes('ExampleConsumerApp')) {
-            content = content.replace(/ExampleConsumerApp/g, pascalCaseProjectName);
-            modified = true;
-          }
-          // Remove SPDX license blocks
-          // JavaScript/TypeScript: // comments
-          const jsLicenseRegex = /^\/\/ SPDX-FileCopyrightText:.*\n\/\/\n\/\/ SPDX-License-Identifier:.*\n\n/m;
-          // HTML/Markdown: <!-- --> comments
-          const htmlLicenseRegex = /^<!--\nSPDX-FileCopyrightText:.*\n\nSPDX-License-Identifier:.*\n-->\n\n/m;
-          // Shell scripts: # comments
-          const shellLicenseRegex = /^# SPDX-FileCopyrightText:.*\n#\n# SPDX-License-Identifier:.*\n\n/m;
-
-          if (jsLicenseRegex.test(content)) {
-            content = content.replace(jsLicenseRegex, '');
-            modified = true;
-          } else if (htmlLicenseRegex.test(content)) {
-            content = content.replace(htmlLicenseRegex, '');
-            modified = true;
-          } else if (shellLicenseRegex.test(content)) {
-            content = content.replace(shellLicenseRegex, '');
-            modified = true;
-          }
-          if (modified) {
-            await fs.writeFile(itemPath, content);
-          }
-
-          // Check for rename
-          if (item.includes('example-consumer-app')) {
-            filesToRename.push(itemPath);
-          }
-        }
-      }
-    }
-
-    for (const oldPath of filesToRename) {
-      const newPath = path.join(
-        path.dirname(oldPath),
-        path.basename(oldPath).replace('example-consumer-app', kebabCaseProjectName),
-      );
-      await fs.rename(oldPath, newPath);
-    }
-
-    // Detect package manager version
-    let detectedPackageManagerVersion = null;
-    const versionCommand = packageManagerChoice === 'npm' ? 'npm --version' : 'yarn --version';
-
-    await new Promise((resolve, reject) => {
+    // 7. Detect package manager version
+    const versionCommand = getVersionCommand(packageManagerChoice);
+    const detectedVersion = await new Promise((resolve, reject) => {
       exec(versionCommand, (error, stdout) => {
         if (error) {
           reject(new Error(`Failed to check ${packageManagerChoice === 'npm' ? 'npm' : 'yarn'} version`));
           return;
         }
-        detectedPackageManagerVersion = stdout.trim();
-        resolve();
+        resolve(stdout.trim());
       });
     });
 
-    const packageJsonPath = path.join(projectDir, 'package.json');
-    const packageJson = await fs.readJson(packageJsonPath);
-    packageJson.name = kebabCaseProjectName;
-    delete packageJson.private;
+    // 8. Update package.json
+    const packageManagerField = formatPackageManagerField(packageManagerChoice, detectedVersion);
+    await updatePackageJson(projectDir, kebabName, packageManagerField);
 
-    // Set packageManager field with detected version
-    if (packageManagerChoice === 'npm') {
-      packageJson.packageManager = `npm@${detectedPackageManagerVersion}`;
-    } else if (packageManagerChoice === 'yarn (v1)') {
-      packageJson.packageManager = `yarn@${detectedPackageManagerVersion}`;
-    } else if (packageManagerChoice === 'yarn (v4)') {
-      packageJson.packageManager = `yarn@${detectedPackageManagerVersion}`;
+    // 9. Create .env
+    await createEnvFile(projectDir, { institutionId, clientId, clientSecret, apiBaseUrl, redirectUris });
+
+    // 10. Ensure .gitignore
+    await ensureGitignore(projectDir);
+
+    // 11. Yarn v4 config
+    if (packageManagerChoice === 'yarn (v4)') {
+      fs.writeFileSync(path.join(projectDir, '.yarnrc.yml'), generateYarnRcYml());
     }
 
-    await fs.writeJson(packageJsonPath, packageJson, { spaces: 2 });
-
-    // Create .env file with all configuration variables
-    const envPath = path.join(projectDir, '.env');
-    const envContent = `INSTITUTION_ID=${institutionId}
-CLIENT_ID=${clientId}
-CLIENT_SECRET=${clientSecret}
-API_URL=${apiBaseUrl}
-REDIRECT_URIS=${JSON.stringify(redirectUris)}
-`;
-    await fs.writeFile(envPath, envContent);
-
-    // Ensure .env is in .gitignore
-    const gitignorePath = path.join(projectDir, '.gitignore');
-    let gitignoreContent = '';
-    if (await fs.pathExists(gitignorePath)) {
-      gitignoreContent = await fs.readFile(gitignorePath, 'utf8');
-    }
-    if (!gitignoreContent.includes('.env')) {
-      gitignoreContent += '\n# Environment variables\n.env\n.env.local\n';
-      await fs.writeFile(gitignorePath, gitignoreContent);
-    }
-
-    let installCommand = '';
-    let packageManagerName = '';
-
-    if (packageManagerChoice === 'npm') {
-      installCommand = 'npm install';
-      packageManagerName = 'npm';
-    } else if (packageManagerChoice === 'yarn (v4)') {
-      installCommand = 'yarn set version berry && yarn install';
-      packageManagerName = 'yarn';
-      fs.writeFileSync(path.join(projectDir, '.yarnrc.yml'), 'nodeLinker: node-modules');
-    } else {
-      // 'yarn (v1)'
-      const majorVersion = parseInt(detectedPackageManagerVersion.split('.')[0], 10);
-
-      if (majorVersion > 1) {
-        // User has yarn v2+, need to configure project to use v1
-        installCommand = 'yarn set version classic && yarn install';
-      } else {
-        // User already has yarn v1
-        installCommand = 'yarn install';
-      }
-      packageManagerName = 'yarn';
-    }
+    // 12. Install dependencies
+    const { installCommand, packageManagerName } = getInstallCommand(packageManagerChoice, detectedVersion);
 
     console.log(chalk.blue(`Installing dependencies with ${packageManagerName}...`));
     await new Promise((resolve, reject) => {
@@ -323,12 +111,13 @@ REDIRECT_URIS=${JSON.stringify(redirectUris)}
       });
     });
 
+    // 13. Success message
     console.log(chalk.green('Project created successfully!'));
 
     const runCommand = packageManagerName === 'npm' ? 'npm run' : 'yarn';
     console.log(
       chalk.blue(`
-Success! Created ${kebabCaseProjectName} at ${projectDir}
+Success! Created ${kebabName} at ${projectDir}
 Inside that directory, you can run several commands:
 
   ${runCommand} dev
@@ -342,7 +131,7 @@ Inside that directory, you can run several commands:
 
 We suggest that you begin by typing:
 
-  cd ${kebabCaseProjectName}
+  cd ${kebabName}
   ${runCommand} dev
 `),
     );
@@ -357,4 +146,4 @@ We suggest that you begin by typing:
   }
 }
 
-run();
+export { run };
