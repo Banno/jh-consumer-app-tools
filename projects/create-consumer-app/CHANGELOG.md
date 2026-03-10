@@ -1,3 +1,13 @@
+## 0.0.10 (2026-03-10)
+
+### 🩹 Fixes
+
+- **create-consumer-app:** ensure api base url doesn't contain paths ([b9f320d](https://github.com/Banno/jh-consumer-app-tools/commit/b9f320d))
+
+### ❤️ Thank You
+
+- John Robinson
+
 ## 0.0.9 (2026-02-27)
 
 This was a version bump only for @jack-henry/create-consumer-app to align it with other projects, there were no code changes.
