@@ -27,5 +27,6 @@
     },
     "projectsRelationship": "independent"
   },
-  "$schema": "./node_modules/nx/schemas/nx-schema.json"
+  "$schema": "./node_modules/nx/schemas/nx-schema.json",
+  "analytics": false
 }
