@@ -33,6 +33,4 @@ jobs:
       - name: Typecheck
         run: yarn typecheck
       - name: Test
-        run: |
-          npx playwright install --with-deps chromium
-          CI=1 yarn test
+        run: CI=1 yarn test
