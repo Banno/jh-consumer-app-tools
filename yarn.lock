@@ -2191,7 +2191,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@jack-henry/consumer-tools@workspace:projects/jh-consumer-tools"
   dependencies:
-    "@jack-henry/jh-elements": "npm:^2.0.0-beta.8"
+    "@jack-henry/jh-elements": "npm:^2.0.0-beta.14"
     "@jack-henry/jh-icons": "npm:^2.0.0-beta.6"
     "@jack-henry/jh-tokens": "npm:^2.0.0-beta.8"
     "@jack-henry/web-component-router": "npm:^3.12.2"
@@ -2209,7 +2209,7 @@ __metadata:
     vite-plugin-static-copy: "npm:3.4.0"
     vitest: "npm:^4.1.9"
   peerDependencies:
-    "@jack-henry/jh-elements": ^2.0.0-beta.8
+    "@jack-henry/jh-elements": ^2.0.0-beta.14
     "@jack-henry/jh-icons": ^2.0.0-beta.6
     "@jack-henry/jh-tokens": ^2.0.0-beta.8
     "@jack-henry/web-component-router": 3.12.2
@@ -2239,7 +2239,7 @@ __metadata:
   resolution: "@jack-henry/example-consumer-app@workspace:projects/create-consumer-app/example-consumer-app"
   dependencies:
     "@jack-henry/consumer-tools": "npm:*"
-    "@jack-henry/jh-elements": "npm:^2.0.0-beta.8"
+    "@jack-henry/jh-elements": "npm:^2.0.0-beta.14"
     "@jack-henry/jh-icons": "npm:^2.0.0-beta.6"
     "@jack-henry/jh-tokens": "npm:^2.0.0-beta.8"
     "@jack-henry/web-component-router": "npm:3.12.2"
@@ -2255,7 +2255,7 @@ __metadata:
   resolution: "@jack-henry/example-development-sandbox@workspace:projects/development-sandbox"
   dependencies:
     "@jack-henry/consumer-tools": "npm:*"
-    "@jack-henry/jh-elements": "npm:^2.0.0-beta.8"
+    "@jack-henry/jh-elements": "npm:^2.0.0-beta.14"
     "@jack-henry/jh-icons": "npm:^2.0.0-beta.6"
     "@jack-henry/jh-tokens": "npm:^2.0.0-beta.8"
     "@lit/context": "npm:^1.1.6"
@@ -2280,18 +2280,27 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@jack-henry/jh-elements@npm:^2.0.0-beta.8":
-  version: 2.0.0-beta.8
-  resolution: "@jack-henry/jh-elements@npm:2.0.0-beta.8"
+"@jack-henry/jh-elements@npm:^2.0.0-beta.14":
+  version: 2.0.0-beta.14
+  resolution: "@jack-henry/jh-elements@npm:2.0.0-beta.14"
   dependencies:
-    "@jack-henry/jh-icons": "npm:2.0.0-beta.6"
-    "@jack-henry/jh-tokens": "npm:2.0.0-beta.8"
+    "@jack-henry/jh-icons": "npm:2.0.0-beta.8"
+    "@jack-henry/jh-tokens": "npm:2.0.0-beta.9"
     lit: "npm:3.3.1"
-  checksum: 10c0/a68e4b38c4a70c37a0a36c9691d81b412b98be8b86ea99a5539c1449a9888503476eee85471e68254fe0d96155692c17785f458405b857cf6400d6c9e96c477f
+  checksum: 10c0/25d37b71436d662fde01cf9f3f8167c44764b2a41a09381595d8a0fd09371398da39444bec87595896f0de8bf5c507ad7344f3b4bc2c4abe24eae098c6a35708
   languageName: node
   linkType: hard
 
-"@jack-henry/jh-icons@npm:2.0.0-beta.6, @jack-henry/jh-icons@npm:^2.0.0-beta.6":
+"@jack-henry/jh-icons@npm:2.0.0-beta.8":
+  version: 2.0.0-beta.8
+  resolution: "@jack-henry/jh-icons@npm:2.0.0-beta.8"
+  dependencies:
+    lit: "npm:>=2.1.1 <4.0.0"
+  checksum: 10c0/5ab1ca15c99d895e7f47adfe53b9e6f6a2e74b8da8325dec5c816f63e47e65904f7cbeb111002cf950361bbe732f4c6296fb51d003195be62d41c9e9f7078163
+  languageName: node
+  linkType: hard
+
+"@jack-henry/jh-icons@npm:^2.0.0-beta.6":
   version: 2.0.0-beta.6
   resolution: "@jack-henry/jh-icons@npm:2.0.0-beta.6"
   dependencies:
@@ -2300,7 +2309,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jack-henry/jh-tokens@npm:2.0.0-beta.8, @jack-henry/jh-tokens@npm:^2.0.0-beta.8":
+"@jack-henry/jh-tokens@npm:2.0.0-beta.9":
+  version: 2.0.0-beta.9
+  resolution: "@jack-henry/jh-tokens@npm:2.0.0-beta.9"
+  checksum: 10c0/f8adecdc9d7ef10d25d4d920846e324dc6403ae1b3f84bbabc5778006227462c17932fac26b542e42835449fbc59df100212594edefe6a7968ae5c62e0319ae4
+  languageName: node
+  linkType: hard
+
+"@jack-henry/jh-tokens@npm:^2.0.0-beta.8":
   version: 2.0.0-beta.8
   resolution: "@jack-henry/jh-tokens@npm:2.0.0-beta.8"
   checksum: 10c0/ee1dd13cfd99b75e0318f32095c232eb203a71ff871160326fd64748c774fe23d51097095eec76e275300905043c7abcacc5de326eb052b0814da3e304a7c1d7
@@ -5216,6 +5232,17 @@ __metadata:
     lit-element: "npm:^4.2.0"
     lit-html: "npm:^3.3.0"
   checksum: 10c0/9f3e171e211be7cd3e01693eac4ba4752fc7bafebc8298fc5b9cb70ff279dd4dc292f1cb425ca42f61c3767a75b7557295c2f6b16335719bc8cf1ca6f3622fb7
+  languageName: node
+  linkType: hard
+
+"lit@npm:>=2.1.1 <4.0.0":
+  version: 3.3.3
+  resolution: "lit@npm:3.3.3"
+  dependencies:
+    "@lit/reactive-element": "npm:^2.1.0"
+    lit-element: "npm:^4.2.0"
+    lit-html: "npm:^3.3.0"
+  checksum: 10c0/11b6175ebffce92f4cf835ddd8a198d49707c27f34b0a7c538d2cb294f6c2fb7ff40aabd3589fcf0c2ed162404faaf2bb7c966fad9024bb9e02d013e2d5aa0b5
   languageName: node
   linkType: hard
 
