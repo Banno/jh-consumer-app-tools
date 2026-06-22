@@ -2192,7 +2192,7 @@ __metadata:
   resolution: "@jack-henry/consumer-tools@workspace:projects/jh-consumer-tools"
   dependencies:
     "@jack-henry/jh-elements": "npm:^2.0.0-beta.8"
-    "@jack-henry/jh-icons": "npm:^2.0.0-beta.6"
+    "@jack-henry/jh-icons": "npm:^2.0.0-beta.8"
     "@jack-henry/jh-tokens": "npm:^2.0.0-beta.8"
     "@jack-henry/web-component-router": "npm:^3.12.2"
     "@lit/context": "npm:1.1.6"
@@ -2210,7 +2210,7 @@ __metadata:
     vitest: "npm:^4.1.9"
   peerDependencies:
     "@jack-henry/jh-elements": ^2.0.0-beta.8
-    "@jack-henry/jh-icons": ^2.0.0-beta.6
+    "@jack-henry/jh-icons": ^2.0.0-beta.8
     "@jack-henry/jh-tokens": ^2.0.0-beta.8
     "@jack-henry/web-component-router": 3.12.2
     "@lit/context": ^1.1.6
@@ -2240,7 +2240,7 @@ __metadata:
   dependencies:
     "@jack-henry/consumer-tools": "npm:*"
     "@jack-henry/jh-elements": "npm:^2.0.0-beta.8"
-    "@jack-henry/jh-icons": "npm:^2.0.0-beta.6"
+    "@jack-henry/jh-icons": "npm:^2.0.0-beta.8"
     "@jack-henry/jh-tokens": "npm:^2.0.0-beta.8"
     "@jack-henry/web-component-router": "npm:3.12.2"
     "@lit/context": "npm:^1.1.6"
@@ -2256,7 +2256,7 @@ __metadata:
   dependencies:
     "@jack-henry/consumer-tools": "npm:*"
     "@jack-henry/jh-elements": "npm:^2.0.0-beta.8"
-    "@jack-henry/jh-icons": "npm:^2.0.0-beta.6"
+    "@jack-henry/jh-icons": "npm:^2.0.0-beta.8"
     "@jack-henry/jh-tokens": "npm:^2.0.0-beta.8"
     "@lit/context": "npm:^1.1.6"
     lit: "npm:^3.3.2"
@@ -2291,12 +2291,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jack-henry/jh-icons@npm:2.0.0-beta.6, @jack-henry/jh-icons@npm:^2.0.0-beta.6":
+"@jack-henry/jh-icons@npm:2.0.0-beta.6":
   version: 2.0.0-beta.6
   resolution: "@jack-henry/jh-icons@npm:2.0.0-beta.6"
   dependencies:
     lit: "npm:2.1.1"
   checksum: 10c0/975ad3f5136ec40d5a600218ebec744a004c796e64a38e9d39b0bb0abd42d0086eab1917e5106fb7a44dc44f6f4339dd993102fbb88dea100e49bb87f89c34cb
+  languageName: node
+  linkType: hard
+
+"@jack-henry/jh-icons@npm:^2.0.0-beta.8":
+  version: 2.0.0-beta.8
+  resolution: "@jack-henry/jh-icons@npm:2.0.0-beta.8"
+  dependencies:
+    lit: "npm:>=2.1.1 <4.0.0"
+  checksum: 10c0/5ab1ca15c99d895e7f47adfe53b9e6f6a2e74b8da8325dec5c816f63e47e65904f7cbeb111002cf950361bbe732f4c6296fb51d003195be62d41c9e9f7078163
   languageName: node
   linkType: hard
 
@@ -5216,6 +5225,17 @@ __metadata:
     lit-element: "npm:^4.2.0"
     lit-html: "npm:^3.3.0"
   checksum: 10c0/9f3e171e211be7cd3e01693eac4ba4752fc7bafebc8298fc5b9cb70ff279dd4dc292f1cb425ca42f61c3767a75b7557295c2f6b16335719bc8cf1ca6f3622fb7
+  languageName: node
+  linkType: hard
+
+"lit@npm:>=2.1.1 <4.0.0":
+  version: 3.3.3
+  resolution: "lit@npm:3.3.3"
+  dependencies:
+    "@lit/reactive-element": "npm:^2.1.0"
+    lit-element: "npm:^4.2.0"
+    lit-html: "npm:^3.3.0"
+  checksum: 10c0/11b6175ebffce92f4cf835ddd8a198d49707c27f34b0a7c538d2cb294f6c2fb7ff40aabd3589fcf0c2ed162404faaf2bb7c966fad9024bb9e02d013e2d5aa0b5
   languageName: node
   linkType: hard
 
