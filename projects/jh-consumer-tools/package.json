@@ -53,7 +53,7 @@
     "NOTICE"
   ],
   "dependencies": {
-    "@jack-henry/jh-elements": "^2.0.0-beta.8",
+    "@jack-henry/jh-elements": "^2.0.0-beta.14",
     "@jack-henry/jh-icons": "^2.0.0-beta.6",
     "@jack-henry/jh-tokens": "^2.0.0-beta.8",
     "openid-client": "^6.8.4",
@@ -74,7 +74,7 @@
     "vitest": "^4.1.9"
   },
   "peerDependencies": {
-    "@jack-henry/jh-elements": "^2.0.0-beta.8",
+    "@jack-henry/jh-elements": "^2.0.0-beta.14",
     "@jack-henry/jh-icons": "^2.0.0-beta.6",
     "@jack-henry/jh-tokens": "^2.0.0-beta.8",
     "@jack-henry/web-component-router": "3.12.2",
