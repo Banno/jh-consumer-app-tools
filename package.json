@@ -30,7 +30,8 @@
   },
   "resolutions": {
     "js-yaml@4.1.0": "^4.1.1",
-    "filelist/minimatch": "^9.0.4"
+    "filelist/minimatch": "^9.0.4",
+    "minimatch": "^10.2.3"
   },
   "commitlint": {
     "extends": [
