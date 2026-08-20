@@ -2007,7 +2007,7 @@ __metadata:
     "@inquirer/prompts": "npm:7.10.1"
     "@vitest/coverage-v8": "npm:^4.1.9"
     chalk: "npm:5.6.2"
-    fs-extra: "npm:11.3.4"
+    fs-extra: "npm:11.4.0"
     vitest: "npm:^4.1.9"
   bin:
     create-consumer-app: ./bin/cli.js
@@ -4006,14 +4006,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fs-extra@npm:11.3.4":
-  version: 11.3.4
-  resolution: "fs-extra@npm:11.3.4"
+"fs-extra@npm:11.4.0":
+  version: 11.4.0
+  resolution: "fs-extra@npm:11.4.0"
   dependencies:
     graceful-fs: "npm:^4.2.0"
     jsonfile: "npm:^6.0.1"
     universalify: "npm:^2.0.0"
-  checksum: 10c0/e08276f767a62496ae97d711aaa692c6a478177f24a85979b6a2881c9db9c68b8c2ad5da0bcf92c0b2a474cea6e935ec245656441527958fd8372cb647087df0
+  checksum: 10c0/1e311eca820a12d3d795f2043dcd5628d017f4d21e634f3f9ef314ae68bee9979758262fb9cb35ffa6f26454c3fffe8b15558733e91e8fc729b07b10bb98d8b6
   languageName: node
   linkType: hard
 
