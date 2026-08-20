@@ -1,3 +1,14 @@
+## 0.0.12 (2026-08-20)
+
+### 🩹 Fixes
+
+- **jh-consumer-tools:** sanitize privacy policy url ([0ab77ad](https://github.com/Banno/jh-consumer-app-tools/commit/0ab77ad))
+- **jh-consumer-tools:** sanitize config json ([cfbef55](https://github.com/Banno/jh-consumer-app-tools/commit/cfbef55))
+
+### ❤️ Thank You
+
+- John Robinson
+
 ## 0.0.11 (2026-03-26)
 
 This was a version bump only for @jack-henry/consumer-tools to align it with other projects, there were no code changes.
