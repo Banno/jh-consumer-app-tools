@@ -34,8 +34,16 @@ export default class JhConsumerFooter extends LitElement {
     return this.institution?.privacyPolicyUrl ? 'Privacy Policy' : 'User Agreement';
   }
 
+  /** Sanitizes the remote config URL to only allow http(s) schemes, preventing XSS via javascript: or data: URIs. */
   get privacyPolicyUrl() {
-    return this.institution?.privacyPolicyUrl || '/eula.html';
+    const raw = this.institution?.privacyPolicyUrl;
+    if (!raw) return '/eula.html';
+    try {
+      const u = new URL(raw, location.origin);
+      return ['http:', 'https:'].includes(u.protocol) ? raw : '/eula.html';
+    } catch {
+      return '/eula.html';
+    }
   }
 
   static styles = css`
