@@ -76,8 +76,9 @@ function loadDsThemes(): string {
       }
       if (fs.existsSync(cssPathDark)) {
         const darkContent = fs.readFileSync(cssPathDark, 'utf8');
-        cssContent += '\n' +
-        `@media (prefers-color-scheme: dark) {
+        cssContent +=
+          '\n' +
+          `@media (prefers-color-scheme: dark) {
           ${darkContent.replace('.jh-theme-dark', ':root')}
         }`;
       } else {
@@ -185,26 +186,55 @@ async function buildInstitutionTheme(themeData: ThemeSet) {
   return cssVariables;
 }
 
+/**
+ * @description builds the institution config object to be injected into the HTML as JSON
+ * @param {WebserverConfigResponse} webserverConfig the webserver configuration response object
+ * @returns the institution config object to be injected into the HTML as JSON
+ */
+function buildInstitutionConfig(webserverConfig: WebserverConfigResponse) {
+  const config = {
+    web: {
+      config: webserverConfig.properties,
+    },
+  };
+  return config;
+}
+
+/**
+ * @description serializes a value to JSON with HTML-safe escaping to prevent script tag breakout
+ * @param {unknown} value the value to serialize
+ * @returns {string} the JSON string with '<', U+2028, and U+2029 escaped to unicode sequences
+ */
+function safeJsonStringify(value: unknown): string {
+  return JSON.stringify(value)
+    .replace(/</g, '\\u003c')
+    .replace(/\u2028/g, '\\u2028')
+    .replace(/\u2029/g, '\\u2029');
+}
+
 export default async function jhThemePlugin(options?: JhThemePluginOptions): Promise<Plugin> {
   const dsThemeCSS = loadDsThemes();
 
-  const baseTransforms = [{
-    tag: 'link',
-    attrs: {
-      rel: 'preload',
-      href: `/fonts/roboto-medium-webfont-ea04e4ff.woff2`,
-      as: 'font',
-      type: 'font/woff2',
-      crossorigin: '',
+  const baseTransforms = [
+    {
+      tag: 'link',
+      attrs: {
+        rel: 'preload',
+        href: `/fonts/roboto-medium-webfont-ea04e4ff.woff2`,
+        as: 'font',
+        type: 'font/woff2',
+        crossorigin: '',
+      },
     },
-  },
-  {
-    tag: 'style',
-    attrs: { id: 'ds-theme' },
-    children: dsThemeCSS,
-  }];
+    {
+      tag: 'style',
+      attrs: { id: 'ds-theme' },
+      children: dsThemeCSS,
+    },
+  ];
 
-  const pageTransforms = [ {
+  const pageTransforms = [
+    {
       tag: 'style',
       attrs: { id: 'page-theme' },
       children: 'body { background-color: var(--jha-background-color); }',
@@ -229,50 +259,53 @@ export default async function jhThemePlugin(options?: JhThemePluginOptions): Pro
   if (options?.apiBaseUrl && options?.institutionId) {
     const webserverConfig = await fetchWebServerConfig(options.apiBaseUrl, options.institutionId);
     const themeCSS = await buildInstitutionTheme(webserverConfig.properties.themes);
-    institutionThemeTransforms = [{
-      tag: 'style',
-      attrs: { id: 'banno-style' },
-      children: BannoOnlineStyles,
-    },
-    {
-      tag: 'style',
-      attrs: { id: 'institution-theme' },
-      children: themeCSS,
-    },
-    {
-      tag: 'style',
-      attrs: { id: 'jha-wc-theme' },
-      children: jhaWcStyles,
-    },
-    {
-      tag: 'style',
-      attrs: { id: 'ds-theme-map' },
-      children: dsMappings,
-    }, // inject initial institution config
-    {
-      tag: 'script',
-      children: `window.banno = {web:{config:${JSON.stringify(webserverConfig.properties)}}};`,
-    },
-    // override jha-platform-font as set by fi-theme above
-    {
-      tag: 'style',
-      children: `
+    institutionThemeTransforms = [
+      {
+        tag: 'style',
+        attrs: { id: 'banno-style' },
+        children: BannoOnlineStyles,
+      },
+      {
+        tag: 'style',
+        attrs: { id: 'institution-theme' },
+        children: themeCSS,
+      },
+      {
+        tag: 'style',
+        attrs: { id: 'jha-wc-theme' },
+        children: jhaWcStyles,
+      },
+      {
+        tag: 'style',
+        attrs: { id: 'ds-theme-map' },
+        children: dsMappings,
+      }, // inject initial institution config as inert JSON data
+      {
+        tag: 'script',
+        attrs: { type: 'application/json', id: 'banno-config' },
+        children: safeJsonStringify(buildInstitutionConfig(webserverConfig)),
+      },
+      {
+        tag: 'script',
+        children: `window.banno = JSON.parse(document.getElementById('banno-config').textContent);`,
+      },
+      // override jha-platform-font as set by fi-theme above
+      {
+        tag: 'style',
+        children: `
       * {
         --jha-platform-font: 'roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
       }
       `,
-    }];
+      },
+    ];
   }
 
   return {
     name: 'jh-theme-plugin',
 
     transformIndexHtml(html) {
-      return [
-        ...baseTransforms,
-        ...institutionThemeTransforms,
-        ...pageTransforms,
-      ];
+      return [...baseTransforms, ...institutionThemeTransforms, ...pageTransforms];
     },
   };
 }

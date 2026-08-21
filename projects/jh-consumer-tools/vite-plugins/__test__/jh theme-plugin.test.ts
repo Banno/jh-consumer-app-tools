@@ -278,17 +278,30 @@ describe('jhThemePlugin', () => {
       }
     });
 
-    it('should inject window.banno script tag', async () => {
+    it('should inject banno config as inert JSON data tag', async () => {
       const plugin = await jhThemePlugin(mockOptions);
 
       if (typeof plugin.transformIndexHtml === 'function') {
         const result = transformHtml(plugin, '<html></html>');
-        const bannoScript = result.find((tag: any) => tag.tag === 'script' && tag.children?.includes('window.banno'));
+        const configTag = result.find((tag: any) => tag.tag === 'script' && tag.attrs?.type === 'application/json');
 
-        expect(bannoScript).toBeDefined();
-        expect(bannoScript.children).toContain('window.banno');
-        expect(bannoScript.children).toContain('web');
-        expect(bannoScript.children).toContain('config');
+        expect(configTag).toBeDefined();
+        expect(configTag.attrs.id).toBe('banno-config');
+        expect(configTag.children).toContain('web');
+        expect(configTag.children).toContain('config');
+      }
+    });
+
+    it('should inject window.banno parser script tag', async () => {
+      const plugin = await jhThemePlugin(mockOptions);
+
+      if (typeof plugin.transformIndexHtml === 'function') {
+        const result = transformHtml(plugin, '<html></html>');
+        const parserScript = result.find((tag: any) => tag.tag === 'script' && tag.children?.includes('window.banno'));
+
+        expect(parserScript).toBeDefined();
+        expect(parserScript.children).toContain('JSON.parse');
+        expect(parserScript.children).toContain('banno-config');
       }
     });
 
@@ -323,14 +336,14 @@ describe('jhThemePlugin', () => {
       if (typeof plugin.transformIndexHtml === 'function') {
         const result = transformHtml(plugin, '<html></html>');
 
-        // Should have at least 11 tags (font preload + 6 style tags + script + font override + dialog + view-transitions + page-theme)
-        expect(result.length).toEqual(11);
+        // Should have 12 tags (font preload + 6 style tags + JSON data tag + parser script + font override + dialog + view-transitions + page-theme)
+        expect(result.length).toEqual(12);
       }
     });
 
     describe('transformation hooks without the options', () => {
       it('should inject only base and page style tags', async () => {
-      const plugin = await jhThemePlugin();
+        const plugin = await jhThemePlugin();
 
         if (typeof plugin.transformIndexHtml === 'function') {
           const result = transformHtml(plugin, '<html></html>');
@@ -463,15 +476,17 @@ describe('jhThemePlugin', () => {
   });
 
   describe('webserver config integration', () => {
-    it('should embed webserver config in window.banno', async () => {
+    it('should embed webserver config in JSON data tag', async () => {
       const plugin = await jhThemePlugin(mockOptions);
 
       if (typeof plugin.transformIndexHtml === 'function') {
         const result = transformHtml(plugin, '<html></html>');
-        const bannoScript = result.find((tag: any) => tag.tag === 'script' && tag.children?.includes('window.banno'));
+        const configTag = result.find((tag: any) => tag.tag === 'script' && tag.attrs?.type === 'application/json');
 
-        const scriptContent = bannoScript.children;
-        expect(scriptContent).toContain(JSON.stringify(mockWebserverConfig.properties));
+        expect(configTag.children).toContain('"web"');
+        expect(configTag.children).toContain('"config"');
+        const parsed = JSON.parse(configTag.children);
+        expect(parsed.web.config).toEqual(mockWebserverConfig.properties);
       }
     });
 
@@ -496,9 +511,10 @@ describe('jhThemePlugin', () => {
 
       if (typeof plugin.transformIndexHtml === 'function') {
         const result = transformHtml(plugin, '<html></html>');
-        const bannoScript = result.find((tag: any) => tag.tag === 'script' && tag.children?.includes('window.banno'));
+        const configTag = result.find((tag: any) => tag.tag === 'script' && tag.attrs?.type === 'application/json');
 
-        expect(bannoScript.children).toContain('customProperty');
+        const parsed = JSON.parse(configTag.children);
+        expect(parsed.web.config.customProperty).toEqual({ nested: { deep: 'value' } });
       }
     });
   });
