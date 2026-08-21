@@ -9,6 +9,34 @@ updates:
     directory: "/" # Location of package manifests
     schedule:
       interval: "weekly"
+    cooldown:
+      default-days: 3
     ignore:
       - dependency-name: "*"
         update-types: ["version-update:semver-major"] # ignore major updates in all deps
+    groups:
+      build-dependencies:
+        applies-to: 'version-updates'
+        patterns:
+          - '@types/*'
+          - 'typescript*'
+          - 'vite'
+          - 'vite-plugin-*'
+        update-types: ['minor', 'patch']
+      dev-dependencies:
+        applies-to: 'version-updates'
+        patterns:
+          - '@commitlint/*'
+          - '@nx/*'
+          - 'commitlint*'
+          - 'nx'
+          - 'prettier*'
+        update-types: ['minor', 'patch']
+      test-dependencies:
+        applies-to: 'version-updates'
+        patterns:
+          - '@open-wc/*'
+          - '@vitest/*'
+          - 'playwright'
+          - 'vitest*'
+        update-types: ['minor', 'patch']
