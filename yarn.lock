@@ -1996,7 +1996,7 @@ __metadata:
     "@jack-henry/jh-elements": "npm:^2.0.0-beta.8"
     "@jack-henry/jh-icons": "npm:^2.0.0-beta.6"
     "@jack-henry/jh-tokens": "npm:^2.0.0"
-    "@jack-henry/web-component-router": "npm:^3.12.2"
+    "@jack-henry/web-component-router": "npm:^3.14.0"
     "@lit/context": "npm:1.1.6"
     "@open-wc/testing-helpers": "npm:^3.0.1"
     "@types/node": "npm:^22.20.1"
@@ -2044,7 +2044,7 @@ __metadata:
     "@jack-henry/jh-elements": "npm:^2.0.0-beta.8"
     "@jack-henry/jh-icons": "npm:^2.0.0-beta.6"
     "@jack-henry/jh-tokens": "npm:^2.0.0"
-    "@jack-henry/web-component-router": "npm:3.12.2"
+    "@jack-henry/web-component-router": "npm:3.14.0"
     "@lit/context": "npm:^1.1.6"
     lit: "npm:^3.3.2"
     vite: "npm:^7.3.5"
@@ -2116,12 +2116,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jack-henry/web-component-router@npm:3.12.2, @jack-henry/web-component-router@npm:^3.12.2":
-  version: 3.12.2
-  resolution: "@jack-henry/web-component-router@npm:3.12.2"
+"@jack-henry/web-component-router@npm:3.14.0, @jack-henry/web-component-router@npm:^3.14.0":
+  version: 3.14.0
+  resolution: "@jack-henry/web-component-router@npm:3.14.0"
   dependencies:
     path-to-regexp: "npm:^6.3.0"
-  checksum: 10c0/856e515dba792a3efe8e1c6fd782edadfa062afcc41ae460042319d519e070e70a4a98e45400aaac645d2e9fc170302f3edfff130c5da9401ef5bdbf7b78a8c1
+  checksum: 10c0/b3371962d394f7feed95d5f8096e68d849c611cdbae2eb7e3723f5a1fee9c975f0f9a7c756e550f36cb42d3ae14e0f7348f0bdbf4ffe721daaaa14bcb4ad34a8
   languageName: node
   linkType: hard
 
