@@ -24,7 +24,7 @@
     "@commitlint/config-workspace-scopes": "^21.0.2",
     "@nx/js": "^23.2.1",
     "husky": "^8.0.3",
-    "lint-staged": ">=10",
+    "lint-staged": ">=17",
     "nx": "23.2.1",
     "prettier": "^3.9.8"
   },
