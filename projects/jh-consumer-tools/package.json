@@ -64,7 +64,7 @@
     "@jack-henry/web-component-router": "^3.14.0",
     "@lit/context": "1.1.6",
     "@open-wc/testing-helpers": "^3.0.1",
-    "@types/node": "^22.20.2",
+    "@types/node": "^22.20.5",
     "@vitest/browser": "^4.1.10",
     "@vitest/browser-playwright": "^4.1.11",
     "glob": "^12.0.0",
