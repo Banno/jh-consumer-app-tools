@@ -1999,7 +1999,7 @@ __metadata:
     "@jack-henry/web-component-router": "npm:^3.14.0"
     "@lit/context": "npm:1.1.6"
     "@open-wc/testing-helpers": "npm:^3.0.1"
-    "@types/node": "npm:^22.20.2"
+    "@types/node": "npm:^22.20.5"
     "@vitest/browser": "npm:^4.1.10"
     "@vitest/browser-playwright": "npm:^4.1.11"
     glob: "npm:^12.0.0"
@@ -2007,7 +2007,7 @@ __metadata:
     openid-client: "npm:^6.8.4"
     playwright: "npm:^1.63.0"
     typescript: "npm:^5.9.3"
-    vite: "npm:^7.3.5"
+    vite: "npm:^7.3.7"
     vite-plugin-static-copy: "npm:3.4.0"
     vitest: "npm:^4.1.11"
   peerDependencies:
@@ -2017,7 +2017,7 @@ __metadata:
     "@jack-henry/web-component-router": 3.12.2
     "@lit/context": ^1.1.6
     lit: ^3.3.2
-    vite: ^7.3.5
+    vite: ^7.3.7
     vite-plugin-static-copy: ^3.4.0
   languageName: unknown
   linkType: soft
@@ -2047,7 +2047,7 @@ __metadata:
     "@jack-henry/web-component-router": "npm:3.14.0"
     "@lit/context": "npm:^1.1.6"
     lit: "npm:^3.3.2"
-    vite: "npm:^7.3.5"
+    vite: "npm:^7.3.7"
     vite-plugin-static-copy: "npm:^3.4.0"
   languageName: unknown
   linkType: soft
@@ -2062,7 +2062,7 @@ __metadata:
     "@jack-henry/jh-tokens": "npm:^2.0.0"
     "@lit/context": "npm:^1.1.6"
     lit: "npm:^3.3.2"
-    vite: "npm:^7.3.5"
+    vite: "npm:^7.3.7"
     vite-plugin-static-copy: "npm:^3.4.0"
   languageName: unknown
   linkType: soft
@@ -2768,12 +2768,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:^22.20.2":
-  version: 22.20.2
-  resolution: "@types/node@npm:22.20.2"
+"@types/node@npm:^22.20.5":
+  version: 22.20.5
+  resolution: "@types/node@npm:22.20.5"
   dependencies:
     undici-types: "npm:~6.21.0"
-  checksum: 10c0/1940dbec0c65a454c3651a282970fbfc998e0f0a5492bf5e067d8d9185f0c47cacc0d028153c481c4e6ecd19381ab03bf3f2efadb0cfacd702e74b6d5e4b212e
+  checksum: 10c0/0cf61a89c6a69917ab49f976a6bb11a29e3b348a6ae19f5827ceb91d3ade781faab58dcf3b8fa625f975f5d7536b9166ff94e8250c29272c667164f77c28fa88
   languageName: node
   linkType: hard
 
@@ -6330,9 +6330,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vite@npm:^7.3.5":
-  version: 7.3.6
-  resolution: "vite@npm:7.3.6"
+"vite@npm:^7.3.7":
+  version: 7.3.7
+  resolution: "vite@npm:7.3.7"
   dependencies:
     esbuild: "npm:^0.27.0 || ^0.28.0"
     fdir: "npm:^6.5.0"
@@ -6381,7 +6381,7 @@ __metadata:
       optional: true
   bin:
     vite: bin/vite.js
-  checksum: 10c0/c6d359f84ad362f5c97ff7988b77c90add04162c60cdf6059375a7d9e3217848c53a8cb6b6c48517bef84b6bba4c9bc85319a889b5236acb7d5a2bc8cb7b9a8d
+  checksum: 10c0/6a3f868a33b849383e29c4e39550155563cf0522b5b6504ab60ff5e44dd07ad472ff87a4d5d2c08f1f70cc6602357f95c38d27371b7612d84801cb790f325a7e
   languageName: node
   linkType: hard
 
