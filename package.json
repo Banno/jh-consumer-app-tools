@@ -19,13 +19,13 @@
     "format": "prettier --write ."
   },
   "devDependencies": {
-    "@commitlint/cli": "^21.2.3",
-    "@commitlint/config-conventional": "^21.2.3",
+    "@commitlint/cli": "^21.2.4",
+    "@commitlint/config-conventional": "^21.2.4",
     "@commitlint/config-workspace-scopes": "^21.0.2",
-    "@nx/js": "^23.3.0",
+    "@nx/js": "^23.3.1",
     "husky": "^8.0.3",
     "lint-staged": ">=10",
-    "nx": "23.3.0",
+    "nx": "23.3.1",
     "prettier": "^3.9.10"
   },
   "resolutions": {
