@@ -57,7 +57,7 @@
     "@jack-henry/jh-icons": "^2.2.0",
     "@jack-henry/jh-tokens": "^2.0.0",
     "openid-client": "^6.8.8",
-    "vite": "^7.3.7",
+    "vite": "^7.3.8",
     "vite-plugin-static-copy": "3.4.0"
   },
   "devDependencies": {
@@ -80,7 +80,7 @@
     "@jack-henry/web-component-router": "3.12.2",
     "@lit/context": "^1.1.6",
     "lit": "^3.3.2",
-    "vite": "^7.3.7",
+    "vite": "^7.3.8",
     "vite-plugin-static-copy": "^3.4.0"
   }
 }
