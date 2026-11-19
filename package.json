@@ -19,14 +19,14 @@
     "format": "prettier --write ."
   },
   "devDependencies": {
-    "@commitlint/cli": "^21.2.3",
-    "@commitlint/config-conventional": "^21.2.3",
+    "@commitlint/cli": "^21.2.4",
+    "@commitlint/config-conventional": "^21.2.4",
     "@commitlint/config-workspace-scopes": "^21.0.2",
-    "@nx/js": "^23.3.0",
+    "@nx/js": "^23.3.2",
     "husky": "^8.0.3",
     "lint-staged": ">=17",
-    "nx": "23.3.0",
-    "prettier": "^3.9.10"
+    "nx": "23.3.2",
+    "prettier": "^3.10.1"
   },
   "resolutions": {
     "js-yaml@4.1.0": "^4.1.1",
