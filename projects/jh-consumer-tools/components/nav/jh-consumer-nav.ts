@@ -6,6 +6,7 @@ import { LitElement, html, css } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 import { type DisplayLink } from '../../controllers/navigation';
+import DialogUtil from '../../utils/dialog-util.js';
 
 import './jh-consumer-menu-group';
 
@@ -13,6 +14,8 @@ const iconMap = {
   dashboard: () => import('@jack-henry/jh-icons/icons-wc/icon-dashboard.js'),
   envelope: () => import('@jack-henry/jh-icons/icons-wc/icon-envelope.js'),
   wallet: () => import('@jack-henry/jh-icons/icons-wc/icon-wallet.js'),
+  receipt: () => import('@jack-henry/jh-icons/icons-wc/icon-receipt.js'),
+  store: () => import('@jack-henry/jh-icons/icons-wc/icon-store.js'),
   'arrow-right-arrow-left': () => import('@jack-henry/jh-icons/icons-wc/icon-arrow-right-arrow-left.js'),
   'arrow-turn-down-to-bracket': () => import('@jack-henry/jh-icons/icons-wc/icon-arrow-turn-down-to-bracket.js'),
   'receipt-bill': () => import('@jack-henry/jh-icons/icons-wc/icon-receipt-bill.js'),
@@ -23,6 +26,7 @@ const iconMap = {
   'document-invoice': () => import('@jack-henry/jh-icons/icons-wc/icon-document-invoice.js'),
   'document-pen': () => import('@jack-henry/jh-icons/icons-wc/icon-document-pen.js'),
   question: () => import('@jack-henry/jh-icons/icons-wc/icon-question.js'),
+  'circle-question-mark': () => import('@jack-henry/jh-icons/icons-wc/icon-circle-question-mark.js'),
   'circle-plus': () => import('@jack-henry/jh-icons/icons-wc/icon-circle-plus.js'),
   'arrow-left-from-square': () => import('@jack-henry/jh-icons/icons-wc/icon-arrow-left-from-square.js'),
   gear: () => import('@jack-henry/jh-icons/icons-wc/icon-gear.js'),
@@ -33,9 +37,11 @@ const iconMap = {
   'screwdriver-wrench': () => import('@jack-henry/jh-icons/icons-wc/icon-screwdriver-wrench.js'),
   'arrow-trend-up': () => import('@jack-henry/jh-icons/icons-wc/icon-arrow-trend-up.js'),
   'icon-shield-dollar-sign': () => import('@jack-henry/jh-icons/icons-wc/icon-shield-dollar-sign.js'),
+  'shield-dollar-sign': () => import('@jack-henry/jh-icons/icons-wc/icon-shield-dollar-sign.js'),
   globe: () => import('@jack-henry/jh-icons/icons-wc/icon-globe.js'),
   briefcase: () => import('@jack-henry/jh-icons/icons-wc/icon-briefcase.js'),
   'building-column': () => import('@jack-henry/jh-icons/icons-wc/icon-building-columns.js'),
+  'building-columns': () => import('@jack-henry/jh-icons/icons-wc/icon-building-columns.js'),
   'circle-chevrons-right': () => import('@jack-henry/jh-icons/icons-wc/icon-circle-chevrons-right.js'),
   'life-preserver': () => import('@jack-henry/jh-icons/icons-wc/icon-life-preserver.js'),
   document: () => import('@jack-henry/jh-icons/icons-wc/icon-document.js'),
@@ -140,6 +146,25 @@ export default class JhConsumerNav extends LitElement {
     return active;
   }
 
+  async confirmNotice(event: Event, link: DisplayLink) {
+    event.preventDefault();
+    try {
+      await DialogUtil.awaitDialog({
+        title: 'Notice',
+        messageBody: link.fdicNotice,
+        confirmLabel: 'Continue',
+        cancelLabel: 'Cancel',
+      });
+    } catch (error) {
+      return;
+    }
+    this.navigate(link.url);
+  }
+
+  navigate(url: string) {
+    window.location.href = url;
+  }
+
   renderLink(link: DisplayLink, sub: boolean = false) {
     let icon;
     if (!sub) {
@@ -151,7 +176,8 @@ export default class JhConsumerNav extends LitElement {
       <a
         href=${link.url}
         aria-current=${this.isActiveLink(link)}
-        ?is-active=${this.isActiveLink(link)}>
+        ?is-active=${this.isActiveLink(link)}
+        @click=${link.fdicNotice ? (event: Event) => this.confirmNotice(event, link) : null}>
         ${!sub ? icon : ''}
         <div class="label">${link.title}</div>
       </a>

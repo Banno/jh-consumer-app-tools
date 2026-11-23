@@ -4,7 +4,11 @@
 
 import { LitElement, html, css } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import getNavigationLinks from '../../controllers/navigation';
+import getNavigationLinks, {
+  getFallbackLinks,
+  type DisplayLink,
+  type NavigationExtras,
+} from '../../controllers/navigation';
 import { type Institution } from '../../types/institution';
 import { type User } from '../../controllers/login-controller';
 import './jh-consumer-nav';
@@ -21,6 +25,20 @@ export default class JhConsumerSidebar extends LitElement {
 
   @property({ type: Object })
   routeConfig: any = {};
+
+  @property({ type: Object })
+  navExtras: NavigationExtras = {};
+
+  @property({ type: Boolean })
+  navReady = true;
+
+  private links: DisplayLink[] = getFallbackLinks();
+
+  willUpdate(changed: Map<string, unknown>) {
+    if (['institution', 'user', 'routeConfig', 'navExtras', 'navReady'].some((name) => changed.has(name))) {
+      this.links = this.buildLinks();
+    }
+  }
 
   static get styles() {
     return [
@@ -68,8 +86,18 @@ export default class JhConsumerSidebar extends LitElement {
     ];
   }
 
+  private buildLinks(): DisplayLink[] {
+    if (!this.navReady) return getFallbackLinks();
+    try {
+      return getNavigationLinks(this.institution, this.user?.sub, this.routeConfig, this.navExtras);
+    } catch (error) {
+      console.warn('Could not build the navigation menu', error);
+      return getFallbackLinks();
+    }
+  }
+
   getNavigationLinks() {
-    return getNavigationLinks(this.institution, this.user.sub, this.routeConfig);
+    return this.links;
   }
 
   render() {
@@ -87,7 +115,7 @@ export default class JhConsumerSidebar extends LitElement {
             </picture>
           </a>
         </div>
-        <jh-consumer-nav .links=${this.getNavigationLinks()}></jh-consumer-nav>
+        <jh-consumer-nav .links=${this.links}></jh-consumer-nav>
         <jh-consumer-user-menu
           .institution=${this.institution}
           .user=${this.user}></jh-consumer-user-menu>

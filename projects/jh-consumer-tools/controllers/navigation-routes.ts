@@ -1,0 +1,47 @@
+// SPDX-FileCopyrightText: 2025 Jack Henry
+//
+// SPDX-License-Identifier: Apache-2.0
+
+import { SSO_LINK_TYPES } from '../constants/sso-types';
+
+const EMBEDDED_LINK_NAMES = new Set(['esi', 'esi2', 'ipay', 'usa-epay']);
+
+const EMBEDDED_LINK_TYPES: string[] = [
+  SSO_LINK_TYPES.POWER_CD_RENEW,
+  SSO_LINK_TYPES.POWER_LOAN,
+  SSO_LINK_TYPES.POWER_M2M_TRANSFERS,
+  SSO_LINK_TYPES.POWER_OPEN_SUBSHARE,
+  SSO_LINK_TYPES.POWER_SKIP_PAYMENT,
+  SSO_LINK_TYPES.POWER_WITHDRAW_CHECK,
+  SSO_LINK_TYPES.POWER_MAIN_REWARDS,
+  SSO_LINK_TYPES.POWER_REWARDS,
+  SSO_LINK_TYPES.POWER_DOCUMENTS,
+  SSO_LINK_TYPES.POWER_DOCUMENTS_EXTERNAL,
+  SSO_LINK_TYPES.POWER_CARD_CONTROLS,
+  SSO_LINK_TYPES.POWER_FULL_VIEW,
+  SSO_LINK_TYPES.POWER_PERKS,
+  SSO_LINK_TYPES.POWER_PAYMENTS,
+  SSO_LINK_TYPES.POWER_FORMS,
+  SSO_LINK_TYPES.POWER_MAIN_LOAN_APPLICATION,
+  SSO_LINK_TYPES.POWER_SECONDARY_LOAN_APPLICATION,
+  SSO_LINK_TYPES.CARD_CONTROLS_PP,
+  SSO_LINK_TYPES.CARD_CONTROLS_PP_MAIN,
+];
+
+const EMBEDDED_LINK_ROUTES = new Map<string, string>([
+  [SSO_LINK_TYPES.POWER_SKIP_PAYMENT, '/skip-a-pay'],
+  [SSO_LINK_TYPES.POWER_M2M_TRANSFERS, '/m2m-transfers'],
+  [SSO_LINK_TYPES.POWER_MAIN_REWARDS, '/power-main-rewards'],
+  [SSO_LINK_TYPES.POWER_MAIN_LOAN_APPLICATION, '/power-main-loan-application'],
+  [SSO_LINK_TYPES.POWER_SECONDARY_LOAN_APPLICATION, '/power-secondary-loan-application'],
+  [SSO_LINK_TYPES.POWER_FORMS, '/power-forms/'],
+  [SSO_LINK_TYPES.RESPONSIVE_BILL_PAY, '/usa-epay'],
+  [SSO_LINK_TYPES.POWER_CARD_CONTROLS, '/power-card-controls'],
+  [SSO_LINK_TYPES.CARD_CONTROLS_PP_MAIN, '/card-controls-pp-main'],
+  [SSO_LINK_TYPES.POWER_FULL_VIEW, '/power-full-view'],
+]);
+
+export function getIframeRoute(linkName: string | undefined, linkType: string): string | undefined {
+  const embedded = EMBEDDED_LINK_NAMES.has((linkName || '').toLowerCase()) || EMBEDDED_LINK_TYPES.includes(linkType);
+  return embedded ? EMBEDDED_LINK_ROUTES.get(linkType) : undefined;
+}

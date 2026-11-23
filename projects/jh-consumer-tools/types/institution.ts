@@ -48,6 +48,7 @@ export type Abilities = {
   billPay: boolean;
   billPayEnrollment: boolean;
   billPaySync: boolean;
+  businessRdc?: boolean;
   canEditMFAQuestions: boolean;
   cardHubMobileSDK: boolean;
   cashManagementReports: boolean;
@@ -92,6 +93,7 @@ export type Abilities = {
   geezeoInsights: boolean;
   geezeoTrx: boolean;
   geezeoWheel: boolean;
+  graphEnabled?: boolean;
   hraDeviceUnblockingFromAnchorDevice?: boolean;
   liveUserValidation: boolean;
   loanPaymentBreakdown?: boolean;
@@ -123,6 +125,7 @@ export type Abilities = {
   schedulableTransfers: boolean;
   selfEnrollRetailOrgs?: boolean;
   selfEnrollment: boolean;
+  selfServiceForms?: boolean;
   selfRecovery: boolean;
   separateBillPayAccounts: boolean;
   sessionExpirationTimeoutMinutes: number;
