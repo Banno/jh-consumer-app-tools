@@ -10,10 +10,11 @@
   "include": ["index.ts", "**/*.js", "**/*.ts", "**/*.types.ts"],
   "exclude": [
     "**/*.test.*",
+    "**/__test__/**",
     "**/*-mock.*",
     "dist/**/*",
     ".vitest/**/*",
-    "vitest.config.js",
+    "vitest.config.*",
     "bin/**/*"
   ]
 }
