@@ -1,3 +1,13 @@
+## 0.0.13 (2026-11-23)
+
+### 🚀 Features
+
+- **jh-consumer-tools:** build the nav menu from the signed-in user's data ([#131](https://github.com/Banno/jh-consumer-app-tools/pull/131))
+
+### ❤️ Thank You
+
+- Jason Smathers @nulluid
+
 ## 0.0.12 (2026-08-20)
 
 ### 🩹 Fixes
