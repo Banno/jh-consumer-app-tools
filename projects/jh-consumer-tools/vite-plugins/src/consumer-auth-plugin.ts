@@ -70,10 +70,19 @@ export default function consumerAuthPlugin(options: ConsumerAuthOptions): Plugin
   /** Basic API proxy */
   const apiHandler = async (req: IncomingMessage, res: ServerResponse, next: (err?: any) => void) => {
     const request = req as CustomIncomingMessage;
-    const apiResponse = await fetch(`${apiBaseUrl}${request.originalUrl}`, {
-      method: 'get',
-      headers: { Authorization: `Bearer ${accessToken.access_token}` },
-    });
+    let apiResponse: Response;
+    let body: string;
+    try {
+      apiResponse = await fetch(`${apiBaseUrl}${request.originalUrl}`, {
+        method: 'get',
+        headers: { Authorization: `Bearer ${accessToken.access_token}` },
+      });
+      body = await apiResponse.text();
+    } catch (err) {
+      res.statusCode = 502;
+      res.end();
+      return;
+    }
     // @ts-expect-error
     (Array.from(apiResponse.headers) as Array<Array<string>>).forEach(([key, value]) => {
       if (apiHeadersToCopy.includes(key.toLowerCase())) {
@@ -82,12 +91,16 @@ export default function consumerAuthPlugin(options: ConsumerAuthOptions): Plugin
     });
 
     res.statusCode = apiResponse.status;
-    if (apiResponse.status >= 200 && apiResponse.status < 300) {
-      const data = await apiResponse.json();
-      res.setHeader('Content-Type', 'application/json');
-      res.end(JSON.stringify(data));
+    if (apiResponse.status >= 200 && apiResponse.status < 300 && body.length > 0) {
+      try {
+        const data = JSON.parse(body);
+        res.setHeader('Content-Type', 'application/json');
+        res.end(JSON.stringify(data));
+      } catch (err) {
+        res.statusCode = 502;
+        res.end();
+      }
     } else {
-      const body = await apiResponse.text();
       res.end(body);
     }
   };
@@ -202,6 +215,8 @@ export default function consumerAuthPlugin(options: ConsumerAuthOptions): Plugin
       server.middlewares.use('/a/conversations/api', apiHandler);
       server.middlewares.use('/a/consumer/api', checkAuth);
       server.middlewares.use('/a/consumer/api', apiHandler);
+      server.middlewares.use('/a/graph/api', checkAuth);
+      server.middlewares.use('/a/graph/api', apiHandler);
       server.middlewares.use('/api', checkAuth);
       server.middlewares.use('/api', apiHandler);
     },

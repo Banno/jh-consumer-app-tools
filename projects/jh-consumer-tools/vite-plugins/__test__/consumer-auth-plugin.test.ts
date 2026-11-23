@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import consumerAuthPlugin from '../src/consumer-auth-plugin';
 import type { ConsumerAuthOptions } from '../src/consumer-auth-plugin';
 import * as client from 'openid-client';
@@ -248,11 +248,12 @@ describe('consumerAuthPlugin', () => {
         // Check that API proxy endpoints are registered
         expect(registeredPaths).toContain('/a/conversations/api');
         expect(registeredPaths).toContain('/a/consumer/api');
+        expect(registeredPaths).toContain('/a/graph/api');
         expect(registeredPaths).toContain('/api');
       }
     });
 
-    it('should register at least 11 middleware handlers', async () => {
+    it('should register at least 13 middleware handlers', async () => {
       const plugin = consumerAuthPlugin(mockOptions);
       const mockServer: any = {
         middlewares: {
@@ -264,9 +265,7 @@ describe('consumerAuthPlugin', () => {
         await plugin.configureServer.call(plugin, mockServer);
         // Should register handlers for:
         // /auth/cb, /auth, /validate (2x), /logout,
-        // /a/conversations/api (2x), /a/consumer/api (2x), /api (2x)
-        // Total: 11+ handlers
-        expect(mockServer.middlewares.use.mock.calls.length).toBeGreaterThanOrEqual(11);
+        expect(mockServer.middlewares.use.mock.calls.length).toBeGreaterThanOrEqual(13);
       }
     });
   });
@@ -420,6 +419,64 @@ describe('consumerAuthPlugin', () => {
 
       const plugin = consumerAuthPlugin(optionsWithoutProtocol);
       expect(plugin).toBeDefined();
+    });
+  });
+
+  describe('api proxy', () => {
+    const makeHandler = async () => {
+      const plugin = consumerAuthPlugin(mockOptions);
+      const mockServer: any = { middlewares: { use: vi.fn() } };
+      await (plugin.configureServer as any).call(plugin, mockServer);
+      const callback = mockServer.middlewares.use.mock.calls.find((call: any[]) => call[0] === '/auth/cb')[1];
+      await callback({ url: '/auth/cb?code=abc' }, { setHeader: vi.fn(), end: vi.fn(), statusCode: 0 }, vi.fn());
+      const calls = mockServer.middlewares.use.mock.calls.filter((call: any[]) => call[0] === '/a/consumer/api');
+      return calls[calls.length - 1][1];
+    };
+    const run = async (upstream: () => Promise<Response>) => {
+      vi.stubGlobal('fetch', vi.fn(upstream));
+      const handler = await makeHandler();
+      const res: any = { statusCode: 0, headers: {} as Record<string, string>, body: undefined as any, ended: false };
+      res.setHeader = (key: string, value: string) => (res.headers[key] = value);
+      res.end = (body?: string) => {
+        res.body = body;
+        res.ended = true;
+      };
+      await handler({ originalUrl: '/a/consumer/api/x', method: 'GET' }, res, vi.fn());
+      return res;
+    };
+    afterEach(() => vi.unstubAllGlobals());
+
+    it('passes a json answer through', async () => {
+      const res = await run(async () => new Response(JSON.stringify({ a: 1 }), { status: 200 }));
+      expect(res.statusCode).toBe(200);
+      expect(JSON.parse(res.body)).toEqual({ a: 1 });
+      expect(res.headers['Content-Type']).toBe('application/json');
+    });
+
+    it('passes an empty success through', async () => {
+      const res = await run(async () => new Response(null, { status: 204 }));
+      expect(res.statusCode).toBe(204);
+      expect(res.ended).toBe(true);
+    });
+
+    it('answers 502 when a success is not json', async () => {
+      const res = await run(async () => new Response('<html></html>', { status: 200 }));
+      expect(res.statusCode).toBe(502);
+      expect(res.ended).toBe(true);
+    });
+
+    it('answers 502 instead of failing when the upstream cannot be reached', async () => {
+      const res = await run(async () => {
+        throw new TypeError('network');
+      });
+      expect(res.statusCode).toBe(502);
+      expect(res.ended).toBe(true);
+    });
+
+    it('passes error answers and their body through', async () => {
+      const res = await run(async () => new Response('{"errorCode":40}', { status: 403 }));
+      expect(res.statusCode).toBe(403);
+      expect(res.body).toBe('{"errorCode":40}');
     });
   });
 });
