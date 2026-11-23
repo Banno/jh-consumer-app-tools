@@ -9,6 +9,8 @@ import Router from '@jack-henry/web-component-router';
 import { RoutingMixin } from '@jack-henry/web-component-router/lib/routing.mixin.js';
 import LoginController, { type User } from '../controllers/login-controller';
 import { loadInstitution } from '../controllers/institution-controller';
+import { loadNavExtras } from '../controllers/nav-extras';
+import { type NavigationExtras } from '../controllers/navigation';
 import { type Institution } from '../types/institution';
 import { userContext, defaultUserContext, type UserContext } from '../contexts/user';
 import { institutionContext, defaultInstitutionContext, type InstitutionContext } from '../contexts/institution';
@@ -68,6 +70,18 @@ export default class JhConsumerLayout extends RoutingMixin(LitElement) {
   @property({ type: String })
   heading: string = '';
 
+  @property({ type: Boolean, attribute: 'wire-transfers' })
+  wireTransfers = false;
+
+  @state()
+  navExtras: NavigationExtras = {};
+
+  private extrasRun = 0;
+
+  private institutionRun = 0;
+
+  private mobileSidebar: JHConsumerSidebar | null = null;
+
   @provide({ context: routerContext })
   routerContext: RouterContext = { ...defaultRouterContext };
 
@@ -105,16 +119,43 @@ export default class JhConsumerLayout extends RoutingMixin(LitElement) {
     return this._user;
   }
 
+  private async loadExtras(institution: Institution) {
+    const run = ++this.extrasRun;
+    const userId = this._user.user?.sub;
+    const extras = await loadNavExtras(institution, userId, { wireTransfers: this.wireTransfers });
+    if (run === this.extrasRun && userId === this._user.user?.sub) {
+      this.navExtras = extras;
+    }
+  }
+
   async updateInstitution() {
+    const run = ++this.institutionRun;
+    this.extrasRun++;
+    this.navExtras = {};
     this.institution = { ...this.institution, ...{ state: 'loading' } };
     let institution: Institution;
     try {
       institution = await loadInstitution(this.institutionId, this._user.user.sub);
     } catch (e) {
-      this.institution = { ...this.institution, ...{ state: 'error' } };
+      if (run === this.institutionRun) {
+        this.institution = { ...this.institution, ...{ state: 'error' } };
+      }
       return;
     }
+    if (run !== this.institutionRun) return;
     this.institution = { ...this.institution, ...{ institution: institution, state: 'ready' } };
+    this.loadExtras(institution);
+  }
+
+  updated(changed: Map<string, unknown>) {
+    super.updated?.(changed);
+    const open = this.mobileSidebar;
+    if (open && (changed.has('navExtras') || changed.has('institution') || changed.has('_user'))) {
+      open.institution = this.institution.institution;
+      open.user = this.user.user;
+      open.navExtras = this.navExtras;
+      open.navReady = this.institution.state === 'ready';
+    }
   }
 
   async routeEnter(currentNode, nextNodeIfExists, routeId, context) {
@@ -159,17 +200,17 @@ export default class JhConsumerLayout extends RoutingMixin(LitElement) {
     el.institution = this.institution.institution;
     el.user = this.user.user;
     el.routeConfig = this.routerContext.config;
-    try {
-      DialogUtil.awaitDialog({ title: 'Menu', dialog: el });
-      // hack, set mobile-menu attribute on dialog
-      const dialogEl = document.querySelector('dialog');
-      if (dialogEl) {
-        console.log('setting mobile-menu attribute on dialog');
-        dialogEl.setAttribute('mobile-menu', '');
-      }
-    } catch (error) {
-      // nothing to do here, the dialog was closed
-    }
+    el.navExtras = this.navExtras;
+    el.navReady = this.institution.state === 'ready';
+    this.mobileSidebar = el;
+    // closing the menu rejects the promise, which is not an error
+    DialogUtil.awaitDialog({ title: 'Menu', dialog: el })
+      .catch(() => {})
+      .finally(() => {
+        if (this.mobileSidebar === el) this.mobileSidebar = null;
+      });
+    // hack, set mobile-menu attribute on dialog
+    document.querySelector('dialog')?.setAttribute('mobile-menu', '');
   }
 
   static styles = [
@@ -247,7 +288,9 @@ export default class JhConsumerLayout extends RoutingMixin(LitElement) {
           <jh-consumer-sidebar
             .institution=${this.institution.institution}
             .user=${this.user.user}
-            .routeConfig=${this.routerContext.config}></jh-consumer-sidebar>
+            .routeConfig=${this.routerContext.config}
+            .navExtras=${this.navExtras}
+            .navReady=${this.institution.state === 'ready'}></jh-consumer-sidebar>
           <jh-page-container heading=${this.heading}>
             <slot></slot>
           </jh-page-container>
